@@ -7,16 +7,89 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SuggestedTools from "@/components/ui/suggest-tool";
 
 const tools = [
-  { id: 1, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "productivity", rating: 4.8, users: "10k+" },
-  { id: 2, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "analytics", rating: 4.7, users: "5k+" },
-  { id: 3, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "ai", rating: 4.9, users: "15k+" },
-  { id: 4, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "productivity", rating: 4.6, users: "8k+" },
-  { id: 5, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "analytics", rating: 4.8, users: "12k+" },
-  { id: 6, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "ai", rating: 4.7, users: "7k+" },
-  { id: 7, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "productivity", rating: 4.9, users: "20k+" },
-  { id: 8, name: "SuperHuman", description: "SuperHuman is an email app used by busy professionals for inbox management.", tags: ["Data Analytics", "Visualization"], category: "analytics", rating: 4.5, users: "6k+" },
+  {
+    id: 1,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "productivity",
+    rating: 4.8,
+    users: "10k+",
+  },
+  {
+    id: 2,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "analytics",
+    rating: 4.7,
+    users: "5k+",
+  },
+  {
+    id: 3,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "ai",
+    rating: 4.9,
+    users: "15k+",
+  },
+  {
+    id: 4,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "productivity",
+    rating: 4.6,
+    users: "8k+",
+  },
+  {
+    id: 5,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "analytics",
+    rating: 4.8,
+    users: "12k+",
+  },
+  {
+    id: 6,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "ai",
+    rating: 4.7,
+    users: "7k+",
+  },
+  {
+    id: 7,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "productivity",
+    rating: 4.9,
+    users: "20k+",
+  },
+  {
+    id: 8,
+    name: "SuperHuman",
+    description:
+      "SuperHuman is an email app used by busy professionals for inbox management.",
+    tags: ["Data Analytics", "Visualization"],
+    category: "analytics",
+    rating: 4.5,
+    users: "6k+",
+  },
 ];
 
 const filterCategories = [
@@ -30,13 +103,17 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("explore");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggest, setShowSuggest] = useState(false);
 
   const filteredTools = tools.filter((tool) => {
-    const matchesFilter = selectedFilter === "all" || tool.category === selectedFilter;
+    const matchesFilter =
+      selectedFilter === "all" || tool.category === selectedFilter;
     const matchesSearch =
       tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      tool.tags.some((tag) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     return matchesFilter && matchesSearch;
   });
 
@@ -48,11 +125,17 @@ export default function Home() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Bot className="h-8 w-8 text-[#6366f1]" />
-              <span className="text-xl font-bold text-white drop-shadow-lg">AnalyticsHub</span>
+              <span className="text-xl font-bold text-white drop-shadow-lg">
+                AnalyticsHub
+              </span>
             </div>
-            <Button className="bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none shadow-md">
+            <Button
+              onClick={() => setShowSuggest(!showSuggest)}
+              className="bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none shadow-md"
+            >
               Suggest tool
             </Button>
+            {showSuggest && <SuggestedTools />}
           </div>
         </div>
       </header>
@@ -64,11 +147,17 @@ export default function Home() {
             Explore emerging AI analytics landscape
           </h1>
           <p className="text-2xl md:text-3xl font-medium text-gray-200 mb-12 drop-shadow-lg">
-            Find the <span className="text-[#6366f1] font-bold">right tool</span> for the job
+            Find the{" "}
+            <span className="text-[#6366f1] font-bold">right tool</span> for the
+            job
           </p>
 
           {/* Navigation Tabs with dark glow */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-md mx-auto">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full max-w-md mx-auto"
+          >
             <TabsList className="grid w-full lg:h-16 grid-cols-3 lg:px-2 bg-[#111827]/80 border border-white/10 shadow-inner shadow-[#000]/50 rounded-lg backdrop-blur-sm">
               <TabsTrigger
                 value="explore"
@@ -104,7 +193,9 @@ export default function Home() {
                   {filterCategories.map((category) => (
                     <Button
                       key={category.id}
-                      variant={selectedFilter === category.id ? "default" : "outline"}
+                      variant={
+                        selectedFilter === category.id ? "default" : "outline"
+                      }
                       onClick={() => setSelectedFilter(category.id)}
                       className={`transition-all duration-200 ${
                         selectedFilter === category.id
@@ -150,15 +241,23 @@ export default function Home() {
                       </Button>
                     </div>
 
-                    <h3 className="font-bold text-lg text-white mb-2 drop-shadow-sm">{tool.name}</h3>
-                    <p className="text-gray-200 text-sm mb-4 line-clamp-3">{tool.description}</p>
+                    <h3 className="font-bold text-lg text-white mb-2 drop-shadow-sm">
+                      {tool.name}
+                    </h3>
+                    <p className="text-gray-200 text-sm mb-4 line-clamp-3">
+                      {tool.description}
+                    </p>
 
                     <div className="flex items-center mb-4 space-x-4">
                       <div className="flex items-center space-x-1">
                         <Star className="h-4 w-4 fill-[#facc15] text-[#facc15]" />
-                        <span className="text-sm font-medium text-gray-200">{tool.rating}</span>
+                        <span className="text-sm font-medium text-gray-200">
+                          {tool.rating}
+                        </span>
                       </div>
-                      <span className="text-sm text-gray-400">{tool.users} users</span>
+                      <span className="text-sm text-gray-400">
+                        {tool.users} users
+                      </span>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -180,8 +279,12 @@ export default function Home() {
             {filteredTools.length === 0 && (
               <div className="text-center py-20">
                 <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-white mb-2">No tools found</h3>
-                <p className="text-gray-300">Try adjusting your filters or search query.</p>
+                <h3 className="text-xl font-medium text-white mb-2">
+                  No tools found
+                </h3>
+                <p className="text-gray-300">
+                  Try adjusting your filters or search query.
+                </p>
               </div>
             )}
           </TabsContent>
@@ -189,19 +292,36 @@ export default function Home() {
           {/* How To */}
           <TabsContent value="howto" className="space-y-8">
             <div className="bg-[#0f1116]/80 rounded-xl p-8 shadow-lg border border-white/10">
-              <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">How to Use AI Analytics Tools</h2>
+              <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">
+                How to Use AI Analytics Tools
+              </h2>
               <div className="space-y-6 text-gray-300">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#6366f1] mb-3">1. Identify Your Needs</h3>
-                  <p>Start by clearly defining what type of analytics you need for your business or project.</p>
+                  <h3 className="text-xl font-semibold text-[#6366f1] mb-3">
+                    1. Identify Your Needs
+                  </h3>
+                  <p>
+                    Start by clearly defining what type of analytics you need
+                    for your business or project.
+                  </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-[#6366f1] mb-3">2. Filter and Search</h3>
-                  <p>Use our filtering system to narrow down tools based on category and search for specific features.</p>
+                  <h3 className="text-xl font-semibold text-[#6366f1] mb-3">
+                    2. Filter and Search
+                  </h3>
+                  <p>
+                    Use our filtering system to narrow down tools based on
+                    category and search for specific features.
+                  </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-[#6366f1] mb-3">3. Compare Options</h3>
-                  <p>Review tool descriptions, ratings, and user counts to make informed decisions.</p>
+                  <h3 className="text-xl font-semibold text-[#6366f1] mb-3">
+                    3. Compare Options
+                  </h3>
+                  <p>
+                    Review tool descriptions, ratings, and user counts to make
+                    informed decisions.
+                  </p>
                 </div>
               </div>
             </div>
@@ -210,19 +330,25 @@ export default function Home() {
           {/* About */}
           <TabsContent value="about" className="space-y-8">
             <div className="bg-[#0f1116]/80 rounded-xl p-8 shadow-lg border border-white/10 text-gray-300">
-              <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">About AI Analytics Landscape</h2>
+              <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">
+                About AI Analytics Landscape
+              </h2>
               <div className="space-y-4 leading-relaxed">
                 <p>
-                  The AI analytics landscape is rapidly evolving, with new tools and platforms emerging constantly. 
-                  Our curated collection helps you discover the most effective solutions for your specific needs.
+                  The AI analytics landscape is rapidly evolving, with new tools
+                  and platforms emerging constantly. Our curated collection
+                  helps you discover the most effective solutions for your
+                  specific needs.
                 </p>
                 <p>
-                  From data visualization to predictive modeling, we've organized tools by category and functionality 
-                  to make your selection process as smooth as possible.
+                  From data visualization to predictive modeling, we have
+                  organized tools by category and functionality to make your
+                  selection process as smooth as possible.
                 </p>
                 <p>
-                  Each tool is rated and reviewed by our community to ensure you have the most accurate and 
-                  up-to-date information when making your decision.
+                  Each tool is rated and reviewed by our community to ensure you
+                  have the most accurate and up-to-date information when making
+                  your decision.
                 </p>
               </div>
             </div>
