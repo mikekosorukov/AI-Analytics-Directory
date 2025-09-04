@@ -1,39 +1,37 @@
 export default function HowTo() {
   return (
-    <div className="space-y-8">
-      <div className="bg-[#0f1116]/80 rounded-xl p-8 shadow-lg border border-white/10">
-        <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">
-          How to Use AI Analytics Tools
+    <div className="space-y-8 bg-[#f5f5f5] p-6 rounded-xl font-serif">
+      <div className="bg-white rounded-xl p-6 lg:px-40 shadow-lg border text-black border-white/10">
+        <h2 className="flex w-full justify-center text-2xl text-center lg:text-3xl font-bold mb-4 capitalize">
+          About AI Analytics landscape
         </h2>
-        <div className="space-y-6 text-gray-300">
-          <div>
-            <h3 className="text-xl font-semibold text-[#6366f1] mb-3">
-              1. Identify Your Needs
-            </h3>
-            <p>
-              Start by clearly defining what type of analytics you need for your
-              business or project.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-[#6366f1] mb-3">
-              2. Filter and Search
-            </h3>
-            <p>
-              Use our filtering system to narrow down tools based on category and
-              search for specific features.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-[#6366f1] mb-3">
-              3. Compare Options
-            </h3>
-            <p>
-              Review tool descriptions, ratings, and user counts to make informed
-              decisions.
-            </p>
-          </div>
+        <p className="text-black font-serif">
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry&apos;s standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book.
+        </p>
+        <h1 className="flex w-full justify-center text-2xl lg:text-3xl font-bold text-black mt-6 mb-4">
+          Categorization
+        </h1>
+        <p className="text-black font-serif">
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry&apos;s standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book.
+        </p>
+        <div className="flex w-full justify-center">
+        <div className="w-full lg:w-1/3 bg-gray-300 h-32 mt-4"></div>
         </div>
+        <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold text-black mt-6 mb-4">
+          Best practices using the directory
+        </h2>
+        <p className="text-black font-serif">
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book.
+        </p>
       </div>
     </div>
   );

@@ -1,27 +1,28 @@
 export default function About() {
   return (
-    <div className="space-y-8">
-      <div className="bg-[#0f1116]/80 rounded-xl p-8 shadow-lg border border-white/10 text-gray-300">
-        <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">
-          About AI Analytics Landscape
+    <div className="space-y-8 bg-[#f5f5f5] p-6 rounded-xl font-serif">
+      <div className="bg-white rounded-xl p-6 lg:px-40 shadow-lg border text-black border-white/10">
+        <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold mb-4 capitalize">
+          Reason for existence
         </h2>
-        <div className="space-y-4 leading-relaxed">
-          <p>
-            The AI analytics landscape is rapidly evolving, with new tools and
-            platforms emerging constantly. Our curated collection helps you
-            discover the most effective solutions for your specific needs.
-          </p>
-          <p>
-            From data visualization to predictive modeling, we have organized
-            tools by category and functionality to make your selection process as
-            smooth as possible.
-          </p>
-          <p>
-            Each tool is rated and reviewed by our community to ensure you have
-            the most accurate and up-to-date information when making your
-            decision.
-          </p>
+        <p className="text-black font-serif">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        </p>
+        <h1 className="flex w-full justify-center text-2xl lg:text-3xl font-bold text-black mt-6 mb-4">
+          Data and content curation
+        </h1>
+        <p className="text-black font-serif">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        </p>
+        <div className="flex w-full justify-center">
+          <div className="w-1/3 bg-gray-300 h-32 mt-4"></div>
         </div>
+        <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold text-black mt-6 mb-4">
+          Community contribution
+        </h2>
+        <p className="text-black font-serif">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        </p>
       </div>
     </div>
   );

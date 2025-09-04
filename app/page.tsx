@@ -60,12 +60,11 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center font-serif">
-          <h1 className="text-5xl md:text-5xl font-bold mb-6 leading-tight text-white drop-shadow-2xl">
-            Explore emerging{" "}
-            <span className="text-[#e67f43]"> AI analytics </span> landscape
-          </h1>
-          <h1 className="text-2xl md:text-5xl font-medium text-gray-200 mb-12 drop-shadow-lg">
-            Find the{" "}
+          <h1 className="text-4xl md:text-5xl font-bold mb-12 leading-[1.5] text-white drop-shadow-2xl">
+            Discover the <span className="text-[#e67f43]">AI analytics</span>{" "}
+            landscape
+            <br />
+            and choose the{" "}
             <span className="text-[#e67f43] font-bold">right tool</span> for the
             job
           </h1>
