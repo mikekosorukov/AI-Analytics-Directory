@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'AI Analytics Tools - Find the Right Tool for the Job',
-  description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
+  description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.'
 };
 
 export default function RootLayout({
