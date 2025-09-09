@@ -71,7 +71,7 @@ export default function Home() {
             job
           </h1>
 
-          {/* Navigation Tabs */}
+          {/* Navigation Tabs
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
@@ -97,7 +97,7 @@ export default function Home() {
                 About
               </TabsTrigger>
             </TabsList>
-          </Tabs>
+          </Tabs> */}
         </div>
       </section>
 
@@ -143,7 +143,6 @@ export default function Home() {
                           <Link
                             href={`/tools/${tool.tool_id}`}
                             key={tool.tool_id}
-                            target="_blank"
                             rel="noopener noreferrer"
                             className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0f1116]/50 text-gray-300"
                           >
@@ -212,7 +211,7 @@ export default function Home() {
             )}
           </TabsContent>
 
-          {/* How To Tab */}
+          {/* How To Tab
           <TabsContent value="howto" className="space-y-8">
             <div className="bg-[#0f1116]/80 rounded-xl p-8 shadow-lg border border-white/10">
               <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">
@@ -247,9 +246,9 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </TabsContent>
+          </TabsContent> */}
 
-          {/* About Tab */}
+          {/* About Tab
           <TabsContent value="about" className="space-y-8">
             <div className="bg-[#0f1116]/80 rounded-xl p-8 shadow-lg border border-white/10 text-gray-300">
               <h2 className="text-3xl font-bold text-white mb-6 drop-shadow-sm">
@@ -274,7 +273,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </main>
     </div>

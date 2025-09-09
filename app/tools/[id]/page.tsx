@@ -1,17 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Bot } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SuggestedTools from "@/components/ui/suggest-tool";
 import ExploreTools from "@/components/ui/explore-tools";
 import HowTo from "@/components/ui/how-to";
 import About from "@/components/ui/about";
 import Header from "@/components/ui/header";
 
-export default function Home() {
+export default function Tools() {
   const [activeTab, setActiveTab] = useState("explore");
 
   return (
