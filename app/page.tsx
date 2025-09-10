@@ -19,10 +19,26 @@ import SuggestedTools from "@/components/ui/suggest-tool";
 import Link from "next/link";
 import Header from "@/components/ui/header";
 
+// Define types for Supabase data
+interface Tool {
+  tool_id: string;
+  tool_name: string;
+  category: string[]; // Array of UUIDs
+  technicality_level: string;
+  short_description: string;
+  url: string;
+  rls: boolean;
+}
+
+interface Category {
+  category_id: string; // UUID as string
+  category_name: string;
+}
+
 export default function Home() {
-  const [tools, setTools] = useState<any[]>([]);
-  const [filteredTools, setFilteredTools] = useState<any[]>([]);
-  const [categories, setCategories] = useState<{ [key: string]: string }>({});
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
+  const [categories, setCategories] = useState<Record<string, string>>({});
   const [technicalityLevels, setTechnicalityLevels] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("explore");
   const [showSuggest, setShowSuggest] = useState(false);
@@ -48,13 +64,13 @@ export default function Home() {
         setFilteredTools(toolsData || []);
 
         // Extract unique technicality levels
-        const uniqueTechnicalityLevels = [
-          ...new Set(toolsData?.map((tool) => tool.technicality_level)),
-        ].filter((level) => level); // Remove null/undefined
+        const uniqueTechnicalityLevels = Array.from(
+          new Set(toolsData?.map((tool: Tool) => tool.technicality_level) || [])
+        ).filter((level) => level);
         setTechnicalityLevels(uniqueTechnicalityLevels);
       }
 
-      // Fetch categories (assuming category_id is a UUID)
+      // Fetch categories
       const { data: categoriesData, error: categoriesError } = await supabase
         .from("categories")
         .select("category_id, category_name");
@@ -62,10 +78,13 @@ export default function Home() {
       if (categoriesError) {
         console.error("Error fetching categories:", categoriesError);
       } else {
-        const categoryMap = categoriesData.reduce((map, category) => {
-          map[category.category_id] = category.category_name;
-          return map;
-        }, {});
+        const categoryMap = categoriesData.reduce(
+          (map: Record<string, string>, category: Category) => {
+            map[category.category_id] = category.category_name;
+            return map;
+          },
+          {}
+        );
         setCategories(categoryMap);
       }
 
