@@ -49,7 +49,13 @@ export default function About() {
         </section>
 
         <div className="flex w-full justify-center">
-          <Image src={diagramImg} alt="" width={400} height={400} className="w-[600px] lg:h-[300px]" />
+          <Image
+            src={diagramImg}
+            alt="AI analytics diagram"
+            width={400}
+            height={400}
+            className="w-[600px] lg:h-[300px]"
+          />
         </div>
 
         {/* Expert opinion */}
@@ -64,9 +70,9 @@ export default function About() {
               view of tools serving the same primary outcome.
             </li>
             <li>
-              <strong>“Details” information</strong> that assesses the tool from
-              the prism of jobs-to-be-done, capabilities, and differentiators,
-              as opposed to marketing-driven benefits.
+              <strong>The “Details” information</strong> that assesses the tool
+              from the prism of jobs-to-be-done, capabilities, and
+              differentiators, as opposed to marketing-driven benefits.
             </li>
             <li>
               <strong>“How to Use” page</strong> provides the framework to learn
@@ -80,10 +86,10 @@ export default function About() {
         <section>
           <h3 className="text-xl lg:text-2xl font-semibold mb-3">Curation</h3>
           <p className="text-black leading-relaxed">
-            Every entry on the list has been manually selected and belongs here.
-            It also means that new tools launched will be added promptly,
-            ensuring exhaustiveness at any given moment. Finally, it means that
-            the information on the list is up-to-date.
+            Curation means that every entry on the list has been manually
+            selected and belongs here. It also means that new tools launched
+            will be added promptly, ensuring exhaustiveness at any given moment.
+            Finally, it means that the information on the list is up-to-date.
           </p>
         </section>
 
@@ -135,20 +141,52 @@ export default function About() {
           <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold mb-4">
             Credits
           </h2>
-          <ul className="list-disc list-inside space-y-3 text-black">
+          <p className="text-black leading-relaxed">
+            This project was made possible thanks to:
+          </p>
+          <ul className="list-disc list-inside space-y-3 text-black mt-3">
             <li>
-              <strong>Josh Harris</strong>, founder of the Semantic Layer
-              startup AnswerLayer, for providing hand-crafted data and
-              committing his time to curating the content.
+              <strong>Josh Harris</strong>, the founder of the Semantic Layer
+              startup{" "}
+              <a
+                href="https://getanswerlayer.com"
+                className="text-blue-600 hover:underline"
+              >
+                AnswerLayer
+              </a>
+              , for providing hand-crafted data and committing his time to
+              curating the content. Follow Josh{" "}
+              <a
+                href="https://www.linkedin.com/in/josh-harris-86188983/"
+                className="text-blue-600 hover:underline"
+              >
+                here
+              </a>
+              . Try his startup AnswerLayer here .
             </li>
             <li>
-              <strong>Mike Kosorukov</strong>, startup PM, for revising the
+              <strong>Mike Kosorukov</strong>, a startup PM, for revising the
               content, putting this app together, and getting it out into the
-              world.
+              world. Follow Mike{" "}
+              <a
+                href="https://www.linkedin.com/in/mkosorukov/"
+                className="text-blue-600 hover:underline"
+              >
+                {" "}
+                here
+              </a>
+              .
             </li>
             <li>
               <strong>Dan Hockenmaier</strong>, an analytics mastermind, for
-              inspiring this idea.
+              inspiring this idea. Follow Dan{" "}
+              <a
+                href="https://www.linkedin.com/in/dan-hock/"
+                className="text-blue-600 hover:underline"
+              >
+                here
+              </a>
+              .
             </li>
           </ul>
         </section>
