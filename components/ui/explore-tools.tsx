@@ -221,7 +221,7 @@ export default function ToolDetails() {
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {whatFor.map((item: string, i: number) => (
-                <li key={i} className="rounded-md p-2">
+                <li key={i} className="rounded-md p-2 bg-slate-200">
                   {item}
                 </li>
               ))}
@@ -236,7 +236,7 @@ export default function ToolDetails() {
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {whoFor.map((item: string, i: number) => (
-                <li key={i} className="bg-slate-100 rounded-md p-2">
+                <li key={i} className="bg-slate-200 rounded-md p-2">
                   {item}
                 </li>
               ))}
@@ -257,12 +257,12 @@ export default function ToolDetails() {
                   return (
                     <details
                       key={i}
-                      className="bg-slate-100 rounded-md p-2 text-sm border"
+                      className="bg-slate-200 rounded-md p-2 text-sm border"
                     >
                       <summary className="cursor-pointer font-medium">
                         {title.trim() || "Alternative"}
                       </summary>
-                      <p className="mt-2 text-gray-700">{desc}</p>
+                      <p className="mt-2 text-gray-700 bg-slate-200">{desc}</p>
                     </details>
                   );
                 })
@@ -281,7 +281,7 @@ export default function ToolDetails() {
             <CardContent className="p-4">
               <h3 className="font-semibold mb-2">Idea behind</h3>
               <hr />
-              <p className="text-sm text-gray-700 mt-3 leading-relaxed">
+              <p className="text-sm text-gray-700 mt-3 leading-relaxed bg-slate-200 p-2 rounded-lg">
                 {toolData.long_description}
               </p>
             </CardContent>
@@ -296,7 +296,7 @@ export default function ToolDetails() {
                   competitorsData.map((c: Competitor, i: number) => (
                     <li
                       key={i}
-                      className="flex items-center justify-between gap-3"
+                      className="flex items-center justify-between gap-3 bg-slate-200 p-2 rounded-lg"
                     >
                       <div className="flex items-center gap-2">
                         <Image
@@ -346,7 +346,7 @@ export default function ToolDetails() {
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-4">
               {mainCapabilities.map((cap: string, i: number) => (
-                <li key={i} className="bg-slate-100 rounded-md p-2">
+                <li key={i} className="bg-slate-200 rounded-md p-2">
                   {cap}
                 </li>
               ))}
@@ -361,7 +361,7 @@ export default function ToolDetails() {
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {uniqueFeatures.map((feat: string, i: number) => (
-                <li key={i} className="rounded-md p-2">
+                <li key={i} className="rounded-md p-2 bg-slate-200">
                   {feat}
                 </li>
               ))}
@@ -376,7 +376,7 @@ export default function ToolDetails() {
             <hr />
             <ul className="space-y-3 text-sm text-gray-700 mt-3">
               {communities.map((c: Community, i: number) => (
-                <li key={i} className="flex items-center justify-between gap-3">
+                <li key={i} className="flex items-center justify-between gap-3 bg-slate-200 p-2 rounded-lg">
                   <div className="flex items-center gap-2">
                     <Image
                       src={getLogoUrl(c.name)}

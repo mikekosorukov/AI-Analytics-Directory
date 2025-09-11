@@ -9,19 +9,16 @@ import About from "@/components/ui/about";
 import Header from "@/components/ui/header";
 
 export default function Tools() {
-  const [activeTab, setActiveTab] = useState(""); // No default tab highlighted on load
+  const [activeTab, setActiveTab] = useState("explore"); // Set "explore" as default active tab
   const router = useRouter();
 
   const handleTabChange = (value: string) => {
-    if (value !== "explore") {
-      setActiveTab(value); // Switch to "howto" or "about"
-    }
-    // "explore" is handled by onClick on the trigger
+    setActiveTab(value); // Update active tab for all tabs, including "explore"
   };
 
   const handleExploreClick = () => {
     console.log("Explore Tools clicked, navigating to homepage...");
-    router.push("/"); // Always navigate to homepage
+    router.push("/"); // Navigate to homepage
   };
 
   return (
@@ -48,24 +45,23 @@ export default function Tools() {
           onValueChange={handleTabChange}
           className="w-full max-w-md mx-auto"
         >
-          <TabsList className="grid w-full lg:h-16 grid-cols-3 lg:px-2 bg-[#111827]/80 border border-white/10 shadow-inner shadow-[#000]/50 rounded-lg backdrop-blur-sm">
+          <TabsList className="grid w-full lg:h-16 grid-cols-3 lg:px-2 bg-[#111827]/90 border border-white/20 shadow-inner shadow-[#000]/60 rounded-xl backdrop-blur-md">
             <TabsTrigger
               value="explore"
               onClick={handleExploreClick}
-              className="lg:h-11 text-gray-300 hover:text-white transition-colors shadow-sm"
-              // No data-[state=active] styles since it won't be active
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
             >
               Explore Tools
             </TabsTrigger>
             <TabsTrigger
               value="howto"
-              className="data-[state=active]:bg-[#6366f1] lg:h-11 data-[state=active]:text-white text-gray-300 hover:text-white transition-colors shadow-sm"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
             >
               How to
             </TabsTrigger>
             <TabsTrigger
               value="about"
-              className="data-[state=active]:bg-[#6366f1] lg:h-11 data-[state=active]:text-white text-gray-300 hover:text-white transition-colors shadow-sm"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
             >
               About
             </TabsTrigger>
@@ -75,18 +71,17 @@ export default function Tools() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        {/* Default to ExploreTools on load when no tab is active */}
-        {activeTab === "" && <ExploreTools />}
-        
-        {/* Tab-based content for other tabs */}
+        {/* Render content based on active tab */}
         <Tabs value={activeTab} onValueChange={handleTabChange}>
+          <TabsContent value="explore">
+            <ExploreTools />
+          </TabsContent>
           <TabsContent value="howto">
             <HowTo />
           </TabsContent>
           <TabsContent value="about">
             <About />
           </TabsContent>
-          {/* No TabsContent for "explore" since it's handled separately */}
         </Tabs>
       </main>
     </div>
