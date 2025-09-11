@@ -2,12 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Search, Bot, Star, ExternalLink } from "lucide-react";
+import { Bot, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -15,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import SuggestedTools from "@/components/ui/suggest-tool";
 import Link from "next/link";
 import Header from "@/components/ui/header";
 
@@ -31,12 +27,12 @@ interface Tool {
 }
 
 interface Category {
-  category_id: string; // UUID as string
+  category_id: string;
   category_name: string;
 }
 
 interface TechnicalityLevel {
-  level_name: string; // Adjust based on your table's column name
+  technicality_level: string; // Updated to match Supabase data
 }
 
 export default function Home() {
@@ -45,7 +41,6 @@ export default function Home() {
   const [categories, setCategories] = useState<Record<string, string>>({});
   const [technicalityLevels, setTechnicalityLevels] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("explore");
-  const [showSuggest, setShowSuggest] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTechnicality, setSelectedTechnicality] =
@@ -184,7 +179,7 @@ export default function Home() {
                   <SelectContent>
                     <SelectItem value="all">All Technicality Levels</SelectItem>
                     {technicalityLevels.map((level) => (
-                      <SelectItem key={level} value={level}>
+                      <SelectItem key={level} value={level} className="capitalize">
                         {level}
                       </SelectItem>
                     ))}

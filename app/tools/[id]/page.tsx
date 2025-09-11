@@ -12,7 +12,7 @@ export default function Tools() {
   const [activeTab, setActiveTab] = useState(""); // No default tab highlighted on load
   const router = useRouter();
 
-  const handleTabChange = (value) => {
+  const handleTabChange = (value: string) => {
     if (value !== "explore") {
       setActiveTab(value); // Switch to "howto" or "about"
     }

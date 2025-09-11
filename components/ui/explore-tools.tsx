@@ -8,16 +8,41 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
+// Define interfaces for better type safety
+interface ToolData {
+  tool_id: string;
+  tool_name: string;
+  url: string;
+  logo_path?: string;
+  communities?: any;
+  competitors?: any;
+  jobs?: any;
+  personas?: any;
+  capabilities?: any;
+  unique_features?: any;
+  vs_status_quo?: any;
+  long_description?: string;
+  // Add other fields as needed
+}
+
+interface Competitor {
+  id: string;
+  name: string;
+  url: string;
+}
+
+interface Community {
+  id: string;
+  name: string;
+  url: string;
+}
+
 export default function ToolDetails() {
   const params = useParams();
   const { id } = params;
-  const [toolData, setToolData] = useState<any>(null);
-  const [communities, setCommunities] = useState<
-    { id: string; name: string; url: string }[]
-  >([]);
-  const [competitorsData, setCompetitorsData] = useState<
-    { id: string; name: string; url: string }[]
-  >([]); // New state for competitors
+  const [toolData, setToolData] = useState<ToolData | null>(null);
+  const [communities, setCommunities] = useState<Community[]>([]);
+  const [competitorsData, setCompetitorsData] = useState<Competitor[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch tool details, communities, and competitors
@@ -62,7 +87,7 @@ export default function ToolDetails() {
       // Parse competitors IDs and fetch from competitors table
       const competitorIds = safeParse(tool.competitors);
       if (competitorIds.length > 0) {
-        // Fetch competitors from competitors table
+        // Fetch competitors from tools_updated table
         const { data: competitorData, error: competitorError } = await supabase
           .from("tools_updated")
           .select("tool_id, tool_name, url")
@@ -71,7 +96,13 @@ export default function ToolDetails() {
         if (competitorError) {
           console.error("Error fetching competitors:", competitorError.message);
         } else {
-          setCompetitorsData(competitorData || []);
+          // Transform competitor data to match the expected type
+          const formattedCompetitors: Competitor[] = (competitorData || []).map((competitor: any) => ({
+            id: competitor.tool_id,
+            name: competitor.tool_name,
+            url: competitor.url,
+          }));
+          setCompetitorsData(formattedCompetitors);
         }
       }
 
@@ -82,7 +113,7 @@ export default function ToolDetails() {
   }, [id]);
 
   // Safe parse function for arrays
-  const safeParse = (val: any) => {
+  const safeParse = (val: any): string[] => {
     try {
       if (!val) return [];
       return Array.isArray(val) ? val : JSON.parse(val);
@@ -262,14 +293,14 @@ export default function ToolDetails() {
               <hr />
               <ul className="space-y-3 text-sm text-gray-700 mt-3">
                 {competitorsData.length > 0 ? (
-                  competitorsData.map((c: any, i: number) => (
+                  competitorsData.map((c: Competitor, i: number) => (
                     <li
                       key={i}
                       className="flex items-center justify-between gap-3"
                     >
                       <div className="flex items-center gap-2">
                         <Image
-                          src={getLogoUrl(c.tool_name)} // Use updated function
+                          src={getLogoUrl(c.name)} // Use updated function
                           alt={`${c.name} logo`}
                           width={24}
                           height={24}
@@ -282,7 +313,7 @@ export default function ToolDetails() {
                               "https://img.icons8.com/ios-filled/50/000000/robot.png"; // Better fallback
                           }}
                         />
-                        <span>{c.tool_name}</span>
+                        <span>{c.name}</span>
                       </div>
                       <Button
                         asChild
@@ -344,11 +375,11 @@ export default function ToolDetails() {
             <h3 className="font-semibold mb-2">Communities</h3>
             <hr />
             <ul className="space-y-3 text-sm text-gray-700 mt-3">
-              {communities.map((c: any, i: number) => (
+              {communities.map((c: Community, i: number) => (
                 <li key={i} className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <Image
-                      src={getLogoUrl(c.name)} // Use updated function
+                      src={getLogoUrl(c.name)}
                       alt={`${c.name} logo`}
                       width={24}
                       height={24}
