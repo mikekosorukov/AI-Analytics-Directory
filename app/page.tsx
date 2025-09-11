@@ -206,39 +206,46 @@ export default function Home() {
                 {filteredTools.map((tool) => (
                   <div
                     key={tool.tool_id}
-                    className="relative group hover:shadow-2xl transition-all duration-300 bg-[#111827]/70 border border-white/10 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer"
+                    className="relative p-4 rounded-lg group hover:shadow-2xl transition-all duration-300 bg-[#111827]/70 border border-white/10 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer"
                   >
-                    <Link
-                      href={`/tools/${tool.tool_id}`}
-                      className="absolute inset-0 z-0"
-                    />
-                    <CardContent className="p-6">
+                    <Link href={`/tools/${tool.tool_id}`} className="p-6">
                       <div className="flex items-start justify-between mb-4">
-                        <Link
-                          href={`${tool?.url}`}
-                          className="relative z-50 w-12 h-12 bg-gradient-to-br from-[#6366f1] to-[#4f46e5] rounded-lg flex items-center justify-center shadow-md"
-                        >
+                        <div className="relative z-50 w-12 h-12 bg-gradient-to-br from-[#6366f1] to-[#4f46e5] rounded-lg flex items-center justify-center shadow-md">
                           <Bot className="h-6 w-6 text-white" />
-                        </Link>
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link
-                            href={`/tools/${tool.tool_id}`}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          asChild
+                          className="group"
+                        >
+                          {/* <Link
+                            href={`${tool.url}`}
                             rel="noopener noreferrer"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0f1116]/50 text-gray-300"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0f1116]/50 text-gray-300 group-hover:bg-gray-300 group-hover:text-black"
                           >
-                            <ExternalLink className="h-4 w-4" />
-                          </Link>
+                            <ExternalLink className="h-4 w-4 hover:bg-gray-300 hover:text-black" />
+                          </Link> */}
                         </Button>
                       </div>
 
-                      <h1 className="font-bold text-lg text-white mb-2 drop-shadow-sm">
+                      <Link
+                        href={`/tools/${tool.tool_id}`}
+                        className="font-bold text-lg text-white mb-2 drop-shadow-sm"
+                      >
                         {tool.tool_name}
-                      </h1>
-                      <p className="text-gray-200 text-sm mb-4 line-clamp-3">
+                      </Link>
+                      <Link
+                        href={`/tools/${tool.tool_id}`}
+                        className="text-gray-200 text-sm mb-4 line-clamp-3"
+                      >
                         {tool.short_description}
-                      </p>
+                      </Link>
 
-                      <div className="flex flex-col items-start justify-center gap-3 text-white">
+                      <Link
+                        href={`/tools/${tool.tool_id}`}
+                        className="flex flex-col items-start justify-center gap-3 text-white"
+                      >
                         <div className="flex items-start gap-2">
                           <h1 className="font-semibold text-xs">Category</h1>
                           <div className="flex gap-2 flex-wrap">
@@ -280,8 +287,8 @@ export default function Home() {
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
+                      </Link>
+                    </Link>
                   </div>
                 ))}
               </div>
