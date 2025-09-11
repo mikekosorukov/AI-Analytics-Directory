@@ -64,9 +64,9 @@ export default function ToolDetails() {
       if (competitorIds.length > 0) {
         // Fetch competitors from competitors table
         const { data: competitorData, error: competitorError } = await supabase
-          .from("competitors")
-          .select("id, name, url")
-          .in("id", competitorIds);
+          .from("tools_updated")
+          .select("tool_id, tool_name, url")
+          .in("tool_id", competitorIds);
 
         if (competitorError) {
           console.error("Error fetching competitors:", competitorError.message);
@@ -95,10 +95,33 @@ export default function ToolDetails() {
     }
   };
 
-  // Get logo URL from Simple Icons
+  // Get logo URL from Simple Icons with fallbacks
   const getLogoUrl = (name: string) => {
-    const formattedName = name.toLowerCase().replace(/\s+/g, "");
-    return `https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/${formattedName}.svg`;
+    if (!name) return "/placeholder-ai-icon.svg"; // Local fallback if available
+
+    // Clean name: lowercase, remove spaces, common words like "AI"
+    let formattedName = name
+      .toLowerCase()
+      .replace(/\s+/g, "")
+      .replace(/ai$/, "");
+
+    // Try variations for better matches (e.g., "Julius AI" → "julius")
+    const variations = [
+      formattedName,
+      name.toLowerCase().replace(/\s+/g, "-"), // e.g., "julius-ai"
+      name.toLowerCase().replace(/\s+/g, ""), // e.g., "juliusai"
+    ];
+
+    // Try Simple Icons for each variation
+    for (const variation of variations) {
+      const url = `https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/${variation}.svg`;
+      // Note: In a real app, you could prefetch or check via API, but here we rely on onError
+      // For now, assume first variation; onError will handle failures
+      if (variation === formattedName) return url; // Default to first
+    }
+
+    // If no Simple Icons, return generic AI icon (free from Icons8 or similar)
+    return "https://img.icons8.com/ios-filled/50/000000/robot.png"; // Generic robot/AI icon; replace with local if preferred
   };
 
   if (loading) {
@@ -134,12 +157,16 @@ export default function ToolDetails() {
         <div className="flex items-center gap-3">
           <Image
             src={
-              toolData.logo_path || getLogoUrl(toolData.tool_name || "default")
+              toolData.logo_path || getLogoUrl(toolData?.tool_name || "default")
             }
             alt={`${toolData.tool_name} logo`}
             width={32}
             height={32}
             className="w-8 h-8"
+            onError={(e) => {
+              e.currentTarget.src =
+                "https://img.icons8.com/ios-filled/50/000000/robot.png"; // Better fallback: AI robot icon
+            }}
           />
           <h2 className="text-2xl font-bold">{toolData.tool_name}</h2>
         </div>
@@ -157,13 +184,13 @@ export default function ToolDetails() {
       {/* Flexbox Layout */}
       <div className="flex flex-col md:flex-row md:flex-wrap gap-6">
         {/* What it is for */}
-        <Card className="flex-1 min-w-[300px]">
+        <Card className="flex-1 min-w-[300px] bg-slate-100">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">What it is for?</h3>
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {whatFor.map((item: string, i: number) => (
-                <li key={i} className="bg-slate-100 rounded-md p-2">
+                <li key={i} className="rounded-md p-2">
                   {item}
                 </li>
               ))}
@@ -172,13 +199,13 @@ export default function ToolDetails() {
         </Card>
 
         {/* Who it is for */}
-        <Card className="flex-1 min-w-[300px]">
+        <Card className="flex-1 min-w-[300px] bg-slate-100">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Who it is for?</h3>
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {whoFor.map((item: string, i: number) => (
-                <li key={i} className="bg-slate-200 rounded-md p-2">
+                <li key={i} className="bg-slate-100 rounded-md p-2">
                   {item}
                 </li>
               ))}
@@ -187,7 +214,7 @@ export default function ToolDetails() {
         </Card>
 
         {/* Vs status quo */}
-        <Card className="flex-1 min-w-[300px]">
+        <Card className="flex-1 min-w-[300px] bg-slate-100">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Vs status quo alternatives</h3>
             <hr />
@@ -218,8 +245,8 @@ export default function ToolDetails() {
         </Card>
 
         {/* Idea + competitors row */}
-        <div className="flex flex-col lg:flex-row gap-6 w-full">
-          <Card className="lg:w-[66%]">
+        <div className="flex flex-col lg:flex-row gap-6 w-full bg-slate-100">
+          <Card className="lg:w-[66%] bg-slate-100">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-2">Idea behind</h3>
               <hr />
@@ -229,7 +256,7 @@ export default function ToolDetails() {
             </CardContent>
           </Card>
 
-          <Card className="flex-1 lg:w-[30%]">
+          <Card className="flex-1 lg:w-[30%] bg-slate-100">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-2">Direct competitors</h3>
               <hr />
@@ -242,17 +269,20 @@ export default function ToolDetails() {
                     >
                       <div className="flex items-center gap-2">
                         <Image
-                          src={getLogoUrl(c.name)}
+                          src={getLogoUrl(c.tool_name)} // Use updated function
                           alt={`${c.name} logo`}
                           width={24}
                           height={24}
                           className="border p-1 w-8 h-8 rounded-full bg-white"
                           onError={(e) => {
+                            console.warn(
+                              `Failed to load competitor logo for ${c.name}`
+                            ); // Debug
                             e.currentTarget.src =
-                              "https://via.placeholder.com/24?text=🌐";
+                              "https://img.icons8.com/ios-filled/50/000000/robot.png"; // Better fallback
                           }}
                         />
-                        <span>{c.name}</span>
+                        <span>{c.tool_name}</span>
                       </div>
                       <Button
                         asChild
@@ -279,7 +309,7 @@ export default function ToolDetails() {
         </div>
 
         {/* Main capabilities */}
-        <Card className="flex-1 min-w-[300px]">
+        <Card className="flex-1 min-w-[300px] bg-slate-100">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Main capabilities</h3>
             <hr />
@@ -294,13 +324,13 @@ export default function ToolDetails() {
         </Card>
 
         {/* Unique features */}
-        <Card className="flex-1 min-w-[300px]">
+        <Card className="flex-1 min-w-[300px] bg-slate-100">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Unique features</h3>
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {uniqueFeatures.map((feat: string, i: number) => (
-                <li key={i} className="bg-slate-50 rounded-md p-2">
+                <li key={i} className="rounded-md p-2">
                   {feat}
                 </li>
               ))}
@@ -309,7 +339,7 @@ export default function ToolDetails() {
         </Card>
 
         {/* Communities */}
-        <Card className="flex-1 min-w-[300px]">
+        <Card className="flex-1 min-w-[300px] bg-slate-100">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Communities</h3>
             <hr />
@@ -318,14 +348,17 @@ export default function ToolDetails() {
                 <li key={i} className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <Image
-                      src={getLogoUrl(c.name)}
+                      src={getLogoUrl(c.name)} // Use updated function
                       alt={`${c.name} logo`}
                       width={24}
                       height={24}
                       className="border p-1 w-8 h-8 rounded-full bg-white"
                       onError={(e) => {
+                        console.warn(
+                          `Failed to load community logo for ${c.name}`
+                        ); // Debug
                         e.currentTarget.src =
-                          "https://via.placeholder.com/24?text=🌐";
+                          "https://img.icons8.com/ios-filled/50/000000/robot.png"; // Better fallback
                       }}
                     />
                     <span>{c.name}</span>

@@ -35,6 +35,10 @@ interface Category {
   category_name: string;
 }
 
+interface TechnicalityLevel {
+  level_name: string; // Adjust based on your table's column name
+}
+
 export default function Home() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
@@ -62,12 +66,6 @@ export default function Home() {
       } else {
         setTools(toolsData || []);
         setFilteredTools(toolsData || []);
-
-        // Extract unique technicality levels
-        const uniqueTechnicalityLevels = Array.from(
-          new Set(toolsData?.map((tool: Tool) => tool.technicality_level) || [])
-        ).filter((level) => level);
-        setTechnicalityLevels(uniqueTechnicalityLevels);
       }
 
       // Fetch categories
@@ -86,6 +84,20 @@ export default function Home() {
           {}
         );
         setCategories(categoryMap);
+      }
+
+      // Fetch technicality levels
+      const { data: technicalityData, error: technicalityError } =
+        await supabase.from("technicality_level").select("technicality_level");
+
+      if (technicalityError) {
+        console.error("Error fetching technicality levels:", technicalityError);
+      } else {
+        const levels =
+          technicalityData?.map(
+            (level: TechnicalityLevel) => level.technicality_level
+          ) || [];
+        setTechnicalityLevels(levels);
       }
 
       setIsLoading(false);
@@ -218,14 +230,16 @@ export default function Home() {
                           size="icon"
                           asChild
                           className="group"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          {/* <Link
+                          <Link
                             href={`${tool.url}`}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0f1116]/50 text-gray-300 group-hover:bg-gray-300 group-hover:text-black"
                           >
                             <ExternalLink className="h-4 w-4 hover:bg-gray-300 hover:text-black" />
-                          </Link> */}
+                          </Link>
                         </Button>
                       </div>
 
