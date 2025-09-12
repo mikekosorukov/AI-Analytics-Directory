@@ -97,11 +97,13 @@ export default function ToolDetails() {
           console.error("Error fetching competitors:", competitorError.message);
         } else {
           // Transform competitor data to match the expected type
-          const formattedCompetitors: Competitor[] = (competitorData || []).map((competitor: any) => ({
-            id: competitor.tool_id,
-            name: competitor.tool_name,
-            url: competitor.url,
-          }));
+          const formattedCompetitors: Competitor[] = (competitorData || []).map(
+            (competitor: any) => ({
+              id: competitor.tool_id,
+              name: competitor.tool_name,
+              url: competitor.url,
+            })
+          );
           setCompetitorsData(formattedCompetitors);
         }
       }
@@ -123,6 +125,26 @@ export default function ToolDetails() {
         .split(",")
         .map((s: string) => s.trim())
         .filter(Boolean);
+    }
+  };
+
+  const regexParse = (val: any): string[] => {
+    try {
+      if (!val) return [];
+      return Array.isArray(val) ? val : JSON.parse(val);
+    } catch {
+      let cleaned = val.replace(/\r?\n/g, ",").replace(/"\s*"/g, '","');
+
+      const regex = /"([^"]+)"|([^,]+)/g;
+      const result: string[] = [];
+      let match;
+
+      while ((match = regex.exec(cleaned)) !== null) {
+        const text = match[1] || match[2];
+        if (text) result.push(text.trim());
+      }
+
+      return result.filter(Boolean);
     }
   };
 
@@ -178,7 +200,7 @@ export default function ToolDetails() {
   const whatFor = safeParse(toolData.jobs);
   const whoFor = safeParse(toolData.personas);
   const mainCapabilities = safeParse(toolData.capabilities);
-  const uniqueFeatures = safeParse(toolData.unique_features);
+  const uniqueFeatures = regexParse(toolData.unique_features);
   const vsStatusQuo = safeParse(toolData.vs_status_quo);
 
   return (
@@ -215,7 +237,7 @@ export default function ToolDetails() {
       {/* Flexbox Layout */}
       <div className="flex flex-col md:flex-row md:flex-wrap gap-6">
         {/* What it is for */}
-        <Card className="flex-1 min-w-[300px] bg-slate-100">
+        <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">What it is for?</h3>
             <hr />
@@ -230,7 +252,7 @@ export default function ToolDetails() {
         </Card>
 
         {/* Who it is for */}
-        <Card className="flex-1 min-w-[300px] bg-slate-100">
+        <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Who it is for?</h3>
             <hr />
@@ -245,7 +267,7 @@ export default function ToolDetails() {
         </Card>
 
         {/* Vs status quo */}
-        <Card className="flex-1 min-w-[300px] bg-slate-100">
+        <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Vs status quo alternatives</h3>
             <hr />
@@ -276,8 +298,8 @@ export default function ToolDetails() {
         </Card>
 
         {/* Idea + competitors row */}
-        <div className="flex flex-col lg:flex-row gap-6 w-full bg-slate-100">
-          <Card className="lg:w-[66%] bg-slate-100">
+        <div className="flex flex-col lg:flex-row gap-6 w-full bg-white">
+          <Card className="lg:w-[66%] bg-white">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-2">Idea behind</h3>
               <hr />
@@ -287,7 +309,7 @@ export default function ToolDetails() {
             </CardContent>
           </Card>
 
-          <Card className="flex-1 lg:w-[30%] bg-slate-100">
+          <Card className="flex-1 lg:w-[30%] bg-white">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-2">Direct competitors</h3>
               <hr />
@@ -340,7 +362,7 @@ export default function ToolDetails() {
         </div>
 
         {/* Main capabilities */}
-        <Card className="flex-1 min-w-[300px] bg-slate-100">
+        <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Main capabilities</h3>
             <hr />
@@ -355,7 +377,7 @@ export default function ToolDetails() {
         </Card>
 
         {/* Unique features */}
-        <Card className="flex-1 min-w-[300px] bg-slate-100">
+        <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Unique features</h3>
             <hr />
@@ -370,13 +392,16 @@ export default function ToolDetails() {
         </Card>
 
         {/* Communities */}
-        <Card className="flex-1 min-w-[300px] bg-slate-100">
+        <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">Communities</h3>
             <hr />
             <ul className="space-y-3 text-sm text-gray-700 mt-3">
               {communities.map((c: Community, i: number) => (
-                <li key={i} className="flex items-center justify-between gap-3 bg-slate-200 p-2 rounded-lg">
+                <li
+                  key={i}
+                  className="flex items-center justify-between gap-3 bg-slate-200 p-2 rounded-lg"
+                >
                   <div className="flex items-center gap-2">
                     <Image
                       src={getLogoUrl(c.name)}
