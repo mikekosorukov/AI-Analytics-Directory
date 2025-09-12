@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Bot, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import Header from "@/components/ui/header";
+import HowTo from "@/components/ui/how-to";
+import About from "@/components/ui/about";
 
 // Define types for Supabase data
 interface Tool {
@@ -32,7 +34,7 @@ interface Category {
 }
 
 interface TechnicalityLevel {
-  technicality_level: string; // Updated to match Supabase data
+  technicality_level: string;
 }
 
 export default function Home() {
@@ -43,8 +45,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("explore");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedTechnicality, setSelectedTechnicality] =
-    useState<string>("all");
+  const [selectedTechnicality, setSelectedTechnicality] = useState<string>("all");
 
   useEffect(() => {
     async function fetchData() {
@@ -82,8 +83,9 @@ export default function Home() {
       }
 
       // Fetch technicality levels
-      const { data: technicalityData, error: technicalityError } =
-        await supabase.from("technicality_level").select("technicality_level");
+      const { data: technicalityData, error: technicalityError } = await supabase
+        .from("technicality_level")
+        .select("technicality_level");
 
       if (technicalityError) {
         console.error("Error fetching technicality levels:", technicalityError);
@@ -140,6 +142,34 @@ export default function Home() {
             job
           </h1>
         </div>
+
+        {/* Navigation Tabs */}
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full max-w-md mx-auto"
+        >
+          <TabsList className="grid w-full lg:h-16 grid-cols-3 lg:px-2 bg-[#111827]/90 border border-white/20 shadow-inner shadow-[#000]/60 rounded-xl backdrop-blur-md">
+            <TabsTrigger
+              value="explore"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
+            >
+              Explore Tools
+            </TabsTrigger>
+            <TabsTrigger
+              value="howto"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
+            >
+              How To
+            </TabsTrigger>
+            <TabsTrigger
+              value="about"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
+            >
+              About
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </section>
 
       {/* Main Content */}
@@ -179,7 +209,11 @@ export default function Home() {
                   <SelectContent>
                     <SelectItem value="all">All Technicality Levels</SelectItem>
                     {technicalityLevels.map((level) => (
-                      <SelectItem key={level} value={level} className="capitalize">
+                      <SelectItem
+                        key={level}
+                        value={level}
+                        className="capitalize"
+                      >
                         {level}
                       </SelectItem>
                     ))}
@@ -314,6 +348,16 @@ export default function Home() {
                 </p>
               </div>
             )}
+          </TabsContent>
+
+          {/* How To Tab */}
+          <TabsContent value="howto" className="space-y-8">
+            <HowTo />
+          </TabsContent>
+
+          {/* About Tab */}
+          <TabsContent value="about" className="space-y-8">
+            <About />
           </TabsContent>
         </Tabs>
       </main>

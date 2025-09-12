@@ -18,7 +18,7 @@ export default function Tools() {
 
   const handleExploreClick = () => {
     console.log("Explore Tools clicked, navigating to homepage...");
-    router.push("/"); // Navigate to homepage
+    router.push("/"); 
   };
 
   return (
