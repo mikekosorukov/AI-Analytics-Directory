@@ -188,7 +188,7 @@ export default function Home() {
                   <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent side='bottom'>
                     <SelectItem value="all">All Categories</SelectItem>
                     {Object.entries(categories).map(([id, name]) => (
                       <SelectItem key={id} value={id}>
@@ -206,7 +206,7 @@ export default function Home() {
                   <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
                     <SelectValue placeholder="Select Technicality" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent side='bottom'>
                     <SelectItem value="all">All Technicality Levels</SelectItem>
                     {technicalityLevels.map((level) => (
                       <SelectItem
