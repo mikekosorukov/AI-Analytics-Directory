@@ -308,7 +308,7 @@ export default function Home() {
                           <h1 className="font-semibold text-xs">
                             Technicality
                           </h1>
-                          <div className="w-40">
+                          <div className="w-32">
                             <div className="h-4 rounded-full bg-gray-300 overflow-hidden">
                               <div
                                 className={`
