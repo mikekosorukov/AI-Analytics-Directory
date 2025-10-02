@@ -296,7 +296,7 @@ export default function Home() {
                               tool.category.map((catId, index) => (
                                 <span
                                   key={index}
-                                  className="bg-gray-500 p-1 px-2 rounded-lg border border-gray-300 text-[12px] scale-[1.3]"
+                                  className="bg-gray-500 p-1 px-2 rounded-lg border border-gray-300 text-[15px]"
                                 >
                                   {categories[catId] || "Unknown Category"}
                                 </span>
