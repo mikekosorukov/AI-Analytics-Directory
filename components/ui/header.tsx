@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SuggestedTools from "@/components/ui/suggest-tool";
+import Image from "next/image";
+import Logo from "@/assets/logo.png";
 
 export default function Header() {
   const [showSuggest, setShowSuggest] = useState(false);
@@ -39,10 +41,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <Bot className="h-8 w-8 text-[#6366f1]" />
-            <span className="text-xl font-bold text-white drop-shadow-lg">
-              AnalyticsHub
-            </span>
+            <Image src={Logo} width="50" alt="logo" className="size-1" />
+            <span className="text-white drop-shadow-lg">AnswerHub</span>
           </div>
 
           {/* Suggest Tool Modal */}
