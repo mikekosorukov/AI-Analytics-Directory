@@ -3,10 +3,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bot, ExternalLink } from "lucide-react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+
+import XIcon from '@/assets/communities/x.svg';
+import SlackIcon from '@/assets/communities/slack.svg';
+import GitHubIcon from '@/assets/communities/github.svg';
+import ProductHuntIcon from '@/assets/communities/producthunt.svg';
 
 // Define interfaces for better type safety
 interface ToolData {
@@ -37,6 +42,13 @@ interface Community {
   name: string;
   url: string;
 }
+
+const COMMUNITY_ICONS: Record<string, StaticImageData> = {
+	X: XIcon,
+	Slack: SlackIcon,
+	GitHub: GitHubIcon,
+	ProductHunt: ProductHuntIcon,
+};
 
 export default function ToolDetails() {
   const params = useParams();
@@ -129,6 +141,8 @@ export default function ToolDetails() {
         .filter(Boolean);
     }
   };
+
+  console.log(communities)
 
   const regexParse = (val: any): string[] => {
     try {
@@ -407,7 +421,7 @@ export default function ToolDetails() {
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src={getLogoUrl(c.name)}
+                      src={COMMUNITY_ICONS[c.name]}
                       alt={`${c.name} logo`}
                       width={24}
                       height={24}
