@@ -300,7 +300,7 @@ export default function Home() {
                         href={`/tools/${tool.tool_id}`}
                         className="flex flex-col items-start justify-center gap-3 text-white"
                       >
-                        <div className="flex items-start gap-2">
+                        <div className="flex items-center gap-2">
                           <h1 className="font-semibold text-xs">Category</h1>
                           <div className="flex gap-2 flex-wrap">
                             {Array.isArray(tool.category) &&
