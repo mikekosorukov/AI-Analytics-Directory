@@ -16,6 +16,7 @@ import Link from "next/link";
 import Header from "@/components/ui/header";
 import HowTo from "@/components/ui/how-to";
 import About from "@/components/ui/about";
+import Image from 'next/image';
 
 // Define types for Supabase data
 interface Tool {
@@ -26,6 +27,7 @@ interface Tool {
   short_description: string;
   url: string;
   rls: boolean;
+  logo_path: string;
 }
 
 interface Category {
@@ -160,7 +162,7 @@ export default function Home() {
               value="howto"
               className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
             >
-              How To
+              How To Use
             </TabsTrigger>
             <TabsTrigger
               value="about"
@@ -188,7 +190,7 @@ export default function Home() {
                   <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent side='bottom'>
                     <SelectItem value="all">All Categories</SelectItem>
                     {Object.entries(categories).map(([id, name]) => (
                       <SelectItem key={id} value={id}>
@@ -206,7 +208,7 @@ export default function Home() {
                   <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
                     <SelectValue placeholder="Select Technicality" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent side='bottom'>
                     <SelectItem value="all">All Technicality Levels</SelectItem>
                     {technicalityLevels.map((level) => (
                       <SelectItem
@@ -252,7 +254,16 @@ export default function Home() {
                     <Link href={`/tools/${tool.tool_id}`} className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="relative z-50 w-12 h-12 bg-gradient-to-br from-[#6366f1] to-[#4f46e5] rounded-lg flex items-center justify-center shadow-md">
-                          <Bot className="h-6 w-6 text-white" />
+                         {tool.logo_path ? (
+														<Image
+															fill
+															className='object-cover rounded-lg'
+															src={`https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${tool.logo_path}`}
+															alt={tool.tool_name}
+														/>
+													) : (
+														<Bot className='h-6 w-6 text-white' />
+													)}
                         </div>
                         <Button
                           variant="ghost"
@@ -296,7 +307,7 @@ export default function Home() {
                               tool.category.map((catId, index) => (
                                 <span
                                   key={index}
-                                  className="bg-gray-500 p-1 px-2 rounded-lg border border-gray-300 text-[8px]"
+                                  className="bg-gray-500 p-1 px-2 rounded-lg border border-gray-300 text-[14px]"
                                 >
                                   {categories[catId] || "Unknown Category"}
                                 </span>
@@ -308,7 +319,7 @@ export default function Home() {
                           <h1 className="font-semibold text-xs">
                             Technicality
                           </h1>
-                          <div className="w-40">
+                          <div className="w-32">
                             <div className="h-4 rounded-full bg-gray-300 overflow-hidden">
                               <div
                                 className={`
