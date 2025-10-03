@@ -407,7 +407,7 @@ export default function ToolDetails() {
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src={ `https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${toolData.logo_path}`}
+                      src={getLogoUrl(c.name)}
                       alt={`${c.name} logo`}
                       width={24}
                       height={24}
