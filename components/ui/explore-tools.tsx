@@ -29,6 +29,7 @@ interface Competitor {
   id: string;
   name: string;
   url: string;
+  logo_path: string;
 }
 
 interface Community {
@@ -90,7 +91,7 @@ export default function ToolDetails() {
         // Fetch competitors from tools_updated table
         const { data: competitorData, error: competitorError } = await supabase
           .from("tools_updated")
-          .select("tool_id, tool_name, url")
+          .select("tool_id, tool_name, url, logo_path")
           .in("tool_id", competitorIds);
 
         if (competitorError) {
@@ -102,6 +103,7 @@ export default function ToolDetails() {
               id: competitor.tool_id,
               name: competitor.tool_name,
               url: competitor.url,
+              logo_path: competitor.logo_path,
             })
           );
           setCompetitorsData(formattedCompetitors);
@@ -323,7 +325,7 @@ export default function ToolDetails() {
                     >
                       <div className="flex items-center gap-2">
                         <Image
-                          src={getLogoUrl(c.name)} // Use updated function
+                          src={`https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${c.logo_path}`}
                           alt={`${c.name} logo`}
                           width={24}
                           height={24}
