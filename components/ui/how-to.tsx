@@ -1,7 +1,7 @@
 export default function HowTo() {
 	return (
 		<div className='space-y-8 bg-[#f5f5f5] p-6 rounded-xl font-serif'>
-			<div className='bg-white rounded-xl p-6 lg:px-40 shadow-lg border text-black border-white/10'>
+			<div className='bg-white rounded-xl p-6 lg:px-40 shadow-lg border text-black space-y-8 border-white/10'>
 				<section className='mb-3'>
 					<h2 className='flex w-full justify-center text-2xl text-center lg:text-3xl font-bold mb-4 capitalize'>
 						Current state of AI Analytics
