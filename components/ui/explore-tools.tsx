@@ -210,7 +210,8 @@ export default function ToolDetails() {
         <div className="flex items-center gap-3">
           <Image
             src={
-              toolData.logo_path || getLogoUrl(toolData?.tool_name || "default")
+               `https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${toolData.logo_path}`
+              //toolData.logo_path || getLogoUrl(toolData?.tool_name || "default")
             }
             alt={`${toolData.tool_name} logo`}
             width={32}
@@ -404,7 +405,7 @@ export default function ToolDetails() {
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src={getLogoUrl(c.name)}
+                      src={ `https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${toolData.logo_path}`}
                       alt={`${c.name} logo`}
                       width={24}
                       height={24}

@@ -16,6 +16,7 @@ import Link from "next/link";
 import Header from "@/components/ui/header";
 import HowTo from "@/components/ui/how-to";
 import About from "@/components/ui/about";
+import Image from 'next/image';
 
 // Define types for Supabase data
 interface Tool {
@@ -26,6 +27,7 @@ interface Tool {
   short_description: string;
   url: string;
   rls: boolean;
+  logo_path: string;
 }
 
 interface Category {
@@ -252,7 +254,16 @@ export default function Home() {
                     <Link href={`/tools/${tool.tool_id}`} className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="relative z-50 w-12 h-12 bg-gradient-to-br from-[#6366f1] to-[#4f46e5] rounded-lg flex items-center justify-center shadow-md">
-                          <Bot className="h-6 w-6 text-white" />
+                         {tool.logo_path ? (
+														<Image
+															fill
+															className='object-cover rounded-lg'
+															src={`https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${tool.logo_path}`}
+															alt={tool.tool_name}
+														/>
+													) : (
+														<Bot className='h-6 w-6 text-white' />
+													)}
                         </div>
                         <Button
                           variant="ghost"
