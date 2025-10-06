@@ -142,8 +142,6 @@ export default function ToolDetails() {
     }
   };
 
-  console.log(communities)
-
   const regexParse = (val: any): string[] => {
     try {
       if (!val) return [];
