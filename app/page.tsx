@@ -71,7 +71,6 @@ export default function Home() {
       .order("tool_name", { ascending: true });
 
     if (selectedCategory !== "all") {
-      // column category is an array — используем contains
       query = query.contains("category", [selectedCategory]);
     }
     if (selectedTechnicality !== "all") {
