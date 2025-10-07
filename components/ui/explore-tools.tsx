@@ -3,39 +3,52 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bot, ExternalLink } from "lucide-react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
+import XIcon from '@/assets/communities/x.svg';
+import SlackIcon from '@/assets/communities/slack.svg';
+import GitHubIcon from '@/assets/communities/github.svg';
+import ProductHuntIcon from '@/assets/communities/producthunt.svg';
+
+interface Community {
+  url: string;
+  platform: string;
+}
+
 // Define interfaces for better type safety
 interface ToolData {
-  tool_id: string;
-  tool_name: string;
-  url: string;
-  logo_path?: string;
-  communities?: any;
-  competitors?: any;
-  jobs?: any;
-  personas?: any;
-  capabilities?: any;
-  unique_features?: any;
-  vs_status_quo?: any;
-  long_description?: string;
-  // Add other fields as needed
+	tool_id: string;
+	tool_name: string;
+	url: string;
+	logo_path?: string;
+	communities?: any;
+	communities_urls: Community[];
+	competitors?: any;
+	jobs?: any;
+	personas?: any;
+	capabilities?: any;
+	unique_features?: any;
+	vs_status_quo?: any;
+	long_description?: string;
+	// Add other fields as needed
 }
 
 interface Competitor {
   id: string;
   name: string;
   url: string;
+  logo_path: string;
 }
 
-interface Community {
-  id: string;
-  name: string;
-  url: string;
-}
+const COMMUNITY_ICONS: Record<string, StaticImageData> = {
+	X: XIcon,
+	Slack: SlackIcon,
+	GitHub: GitHubIcon,
+	ProductHunt: ProductHuntIcon,
+};
 
 export default function ToolDetails() {
   const params = useParams();
@@ -69,20 +82,20 @@ export default function ToolDetails() {
       setToolData(tool);
 
       // Parse communities IDs
-      const communityIds = safeParse(tool.communities);
-      if (communityIds.length > 0) {
-        // Fetch communities from communities table
-        const { data: communityData, error: communityError } = await supabase
-          .from("communities")
-          .select("id, name, url")
-          .in("id", communityIds);
+      //const communityIds = safeParse(tool.communities);
+      //if (communityIds.length > 0) {
+      //  // Fetch communities from communities table
+      //  const { data: communityData, error: communityError } = await supabase
+      //    .from("communities")
+      //    .select("id, name, url")
+      //    .in("id", communityIds);
 
-        if (communityError) {
-          console.error("Error fetching communities:", communityError.message);
-        } else {
-          setCommunities(communityData || []);
-        }
-      }
+      //  if (communityError) {
+      //    console.error("Error fetching communities:", communityError.message);
+      //  } else {
+      //    setCommunities(communityData || []);
+      //  }
+      //}
 
       // Parse competitors IDs and fetch from competitors table
       const competitorIds = safeParse(tool.competitors);
@@ -90,7 +103,7 @@ export default function ToolDetails() {
         // Fetch competitors from tools_updated table
         const { data: competitorData, error: competitorError } = await supabase
           .from("tools_updated")
-          .select("tool_id, tool_name, url")
+          .select("tool_id, tool_name, url, logo_path")
           .in("tool_id", competitorIds);
 
         if (competitorError) {
@@ -102,6 +115,7 @@ export default function ToolDetails() {
               id: competitor.tool_id,
               name: competitor.tool_name,
               url: competitor.url,
+              logo_path: competitor.logo_path,
             })
           );
           setCompetitorsData(formattedCompetitors);
@@ -323,7 +337,7 @@ export default function ToolDetails() {
                     >
                       <div className="flex items-center gap-2">
                         <Image
-                          src={getLogoUrl(c.name)} // Use updated function
+                          src={`https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${c.logo_path}`}
                           alt={`${c.name} logo`}
                           width={24}
                           height={24}
@@ -398,27 +412,27 @@ export default function ToolDetails() {
             <h3 className="font-semibold mb-2">Communities</h3>
             <hr />
             <ul className="space-y-3 text-sm text-gray-700 mt-3">
-              {communities.map((c: Community, i: number) => (
+              {toolData?.communities_urls?.map((c: Community, i: number) => (
                 <li
                   key={i}
                   className="flex items-center justify-between gap-3 bg-slate-200 p-2 rounded-lg"
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src={ `https://fonkqzvixslrqlrbrjhi.supabase.co/storage/v1/object/public/public-assets/${toolData.logo_path}`}
-                      alt={`${c.name} logo`}
+                      src={COMMUNITY_ICONS[c.platform]}
+                      alt={`${c.platform} logo`}
                       width={24}
                       height={24}
                       className="border p-1 w-8 h-8 rounded-full bg-white"
                       onError={(e) => {
                         console.warn(
-                          `Failed to load community logo for ${c.name}`
+                          `Failed to load community logo for ${c.platform}`
                         ); // Debug
                         e.currentTarget.src =
                           "https://img.icons8.com/ios-filled/50/000000/robot.png"; // Better fallback
                       }}
                     />
-                    <span>{c.name}</span>
+                    <span>{c.platform}</span>
                   </div>
                   <Button
                     asChild
