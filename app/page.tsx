@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Bot, ExternalLink } from "lucide-react";
+import { Bot, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -17,6 +17,8 @@ import Header from "@/components/ui/header";
 import HowTo from "@/components/ui/how-to";
 import About from "@/components/ui/about";
 import Image from 'next/image';
+
+const PAGE_SIZE = 8;
 
 // Define types for Supabase data
 interface Tool {
@@ -40,92 +42,118 @@ interface TechnicalityLevel {
 }
 
 export default function Home() {
+  //data
   const [tools, setTools] = useState<Tool[]>([]);
-  const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
+  const [total, setTotal] = useState<number | null>(null);
+
+  //meta
   const [categories, setCategories] = useState<Record<string, string>>({});
   const [technicalityLevels, setTechnicalityLevels] = useState<string[]>([]);
+
+  //ui state
   const [activeTab, setActiveTab] = useState("explore");
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTechnicality, setSelectedTechnicality] = useState<string>("all");
 
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isPageLoading, setIsPageLoading] = useState(false);
 
-      // Fetch tools
-      const { data: toolsData, error: toolsError } = await supabase
-        .from("tools_updated")
-        .select("*")
-        .eq("rls", true);
+  const hasMore = total === null ? false : tools?.length < total;
 
-      if (toolsError) {
-        console.error("Error fetching tools:", toolsError);
-      } else {
-        setTools(toolsData || []);
-        setFilteredTools(toolsData || []);
-      }
+  const buildQuery = useCallback(() => {
+    let query = supabase
+      .from("tools_updated")
+      .select(
+        "tool_id, tool_name, category, technicality_level, short_description, url, rls, logo_path",
+        { count: "exact" }
+      )
+      .eq("rls", true)
+      .order("tool_name", { ascending: true });
 
-      // Fetch categories
+    if (selectedCategory !== "all") {
+      // column category is an array — используем contains
+      query = query.contains("category", [selectedCategory]);
+    }
+    if (selectedTechnicality !== "all") {
+      query = query.eq("technicality_level", selectedTechnicality);
+    }
+    return query;
+  }, [selectedCategory, selectedTechnicality]);
+
+  const loadFirstPage = useCallback(async () => {
+    setIsInitialLoading(true);
+    setTools([]);
+    setTotal(null);
+
+    const from = 0;
+    const to = PAGE_SIZE - 1;
+
+    const { data, error, count } = await buildQuery().range(from, to);
+
+    if (error) {
+      console.error("Error fetching first page:", error);
+      setIsInitialLoading(false);
+      return;
+    }
+
+    setTools(data || []);
+    setTotal(count ?? 0);
+    setIsInitialLoading(false);
+  }, [buildQuery]);
+
+  const loadMore = async () => {
+    if (isPageLoading) return;
+    setIsPageLoading(true);
+
+    const from = tools?.length;
+    const to = tools?.length + PAGE_SIZE - 1;
+
+    const { data, error } = await buildQuery().range(from, to);
+    
+    if (error) {
+      console.error("Error fetching next page:", error);
+      setIsPageLoading(false);
+      return;
+    }
+
+    setTools((prev) => [...prev, ...(data || [])]);
+    setIsPageLoading(false);
+  }
+
+    useEffect(() => {
+    (async () => {
       const { data: categoriesData, error: categoriesError } = await supabase
         .from("categories")
         .select("category_id, category_name");
-
       if (categoriesError) {
         console.error("Error fetching categories:", categoriesError);
       } else {
-        const categoryMap = categoriesData.reduce(
-          (map: Record<string, string>, category: Category) => {
-            map[category.category_id] = category.category_name;
-            return map;
+        const map = (categoriesData || []).reduce(
+          (acc: Record<string, string>, c: Category) => {
+            acc[c.category_id] = c.category_name;
+            return acc;
           },
           {}
         );
-        setCategories(categoryMap);
+        setCategories(map);
       }
 
-      // Fetch technicality levels
       const { data: technicalityData, error: technicalityError } = await supabase
         .from("technicality_level")
         .select("technicality_level");
-
       if (technicalityError) {
         console.error("Error fetching technicality levels:", technicalityError);
       } else {
-        const levels =
-          technicalityData?.map(
-            (level: TechnicalityLevel) => level.technicality_level
-          ) || [];
-        setTechnicalityLevels(levels);
+        setTechnicalityLevels(
+          (technicalityData || []).map((t: TechnicalityLevel) => t.technicality_level)
+        );
       }
-
-      setIsLoading(false);
-    }
-    fetchData();
+    })();
   }, []);
 
-  // Filter tools based on category and technicality
   useEffect(() => {
-    let filtered = tools;
-
-    // Filter by category (using UUID)
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(
-        (tool) =>
-          Array.isArray(tool.category) &&
-          tool.category.includes(selectedCategory)
-      );
-    }
-
-    // Filter by technicality
-    if (selectedTechnicality !== "all") {
-      filtered = filtered.filter(
-        (tool) => tool.technicality_level === selectedTechnicality
-      );
-    }
-
-    setFilteredTools(filtered);
-  }, [selectedCategory, selectedTechnicality, tools]);
+    loadFirstPage();
+  }, [loadFirstPage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f1116] via-[#111827] to-[#0b0d14]">
@@ -237,7 +265,7 @@ export default function Home() {
             </div>
 
             {/* Tools Grid */}
-            {isLoading ? (
+            {isInitialLoading ? (
               <div className="text-center py-20">
                 <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4 animate-pulse" />
                 <h3 className="text-xl font-medium text-white mb-2">
@@ -246,7 +274,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                {filteredTools.map((tool) => (
+                {tools.map((tool) => (
                   <div
                     key={tool.tool_id}
                     className="relative p-4 rounded-lg group hover:shadow-2xl transition-all duration-300 bg-[#111827]/70 border border-white/10 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer"
@@ -347,16 +375,23 @@ export default function Home() {
                 ))}
               </div>
             )}
-
-            {!isLoading && filteredTools.length === 0 && (
-              <div className="text-center py-20">
-                <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-white mb-2">
-                  No tools found
-                </h3>
-                <p className="text-gray-300">
-                  Try adjusting your filters or search query.
-                </p>
+            
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <Button
+                  onClick={loadMore}
+                  disabled={isPageLoading}
+                  className="bg-[#6366f1] hover:bg-[#5458e6] text-white"
+                >
+                  {isPageLoading ? (
+                    <span className="inline-flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Loading...
+                    </span>
+                  ) : (
+                    "Show more"
+                  )}
+                </Button>
               </div>
             )}
           </TabsContent>
