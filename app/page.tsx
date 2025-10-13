@@ -181,19 +181,19 @@ export default function Home() {
           <TabsList className="grid w-full lg:h-16 grid-cols-3 lg:px-2 bg-[#111827]/90 border border-white/20 shadow-inner shadow-[#000]/60 rounded-xl backdrop-blur-md">
             <TabsTrigger
               value="explore"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold"
             >
               Explore Tools
             </TabsTrigger>
             <TabsTrigger
               value="howto"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold"
             >
               How To Use
             </TabsTrigger>
             <TabsTrigger
               value="about"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
+              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold"
             >
               About
             </TabsTrigger>
