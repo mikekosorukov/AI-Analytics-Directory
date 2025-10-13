@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import type { PluginAPI } from 'tailwindcss/types/config';
 
 const config: Config = {
   darkMode: ['class'],
@@ -85,6 +86,16 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'),
+    function ({ addUtilities }: PluginAPI) {
+      addUtilities({
+        '.selection-custom': {
+          '::selection': {
+            backgroundColor: 'rgba(71, 57, 130, 0.3)',
+            color: 'inherit',
+          },
+        },
+      });
+    },],
 };
 export default config;
