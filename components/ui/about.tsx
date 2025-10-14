@@ -1,13 +1,17 @@
 import Image from "next/image";
 import diagramImg from "@/assets/about_diagram.png";
 
+import { IBM_Plex_Sans } from 'next/font/google';
+
+const IBM = IBM_Plex_Sans({ subsets: ['latin'] });
+
 export default function About() {
   return (
-    <div className="space-y-8 bg-[#f5f5f5] p-6 rounded-xl font-serif">
+    <div className={`space-y-8 bg-[#f5f5f5] p-6 rounded-xl font-serif selection-custom text-lg ${IBM.className}`}>
       <div className="bg-white rounded-xl p-6 lg:px-20 xl:px-40 shadow-lg border text-black border-white/10 space-y-8">
         {/* Reasons for existing */}
         <section>
-          <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold mb-4">
+          <h2 className="flex w-full text-2xl lg:text-3xl font-bold mt-5 mb-8">
             Reasons for existing
           </h2>
           <p className="text-black leading-relaxed">
@@ -34,7 +38,7 @@ export default function About() {
             two major components that we believe are essential for delivering
             value in the face of an emerging technology:
           </p>
-          <p className="mt-2 font-semibold">Expert opinion and Curation</p>
+          <p className="flex w-full text-2xl lg:text-3xl font-bold my-8 capitalize">Expert opinion and Curation</p>
 
           <p className="mt-4 text-black leading-relaxed">
             Everyone knows that Intercom and Zendesk deliver on the “enabling
@@ -84,7 +88,7 @@ export default function About() {
 
         {/* Curation */}
         <section>
-          <h3 className="text-xl lg:text-2xl font-semibold mb-3">Curation</h3>
+          <h3 className="flex w-full text-2xl lg:text-3xl font-bold my-8 capitalize">Curation</h3>
           <p className="text-black leading-relaxed">
             Curation means that every entry on the list has been manually
             selected and belongs here. It also means that new tools launched
@@ -95,7 +99,7 @@ export default function About() {
 
         {/* Data and content */}
         <section>
-          <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold mb-4">
+          <h2 className="flex w-full text-2xl lg:text-3xl font-bold my-8 capitalize">
             Data and content
           </h2>
           <p className="text-black leading-relaxed">
@@ -116,7 +120,7 @@ export default function About() {
 
         {/* Vision and community */}
         <section>
-          <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold mb-4">
+          <h2 className="flex w-full text-2xl lg:text-3xl font-bold my-8 capitalize">
             Project vision and community
           </h2>
           <p className="text-black leading-relaxed">
@@ -138,7 +142,7 @@ export default function About() {
 
         {/* Credits */}
         <section>
-          <h2 className="flex w-full justify-center text-2xl lg:text-3xl font-bold mb-4">
+          <h2 className="flex w-full text-2xl lg:text-3xl font-bold my-8 capitalize">
             Credits
           </h2>
           <p className="text-black leading-relaxed">
@@ -150,7 +154,8 @@ export default function About() {
               startup{" "}
               <a
                 href="https://getanswerlayer.com"
-                className="text-blue-600 hover:underline"
+                target='_blank'
+                className="text-[#4739ba] underline underline-offset-[3px] hover:bg-[#4739ba]/25"
               >
                 AnswerLayer
               </a>
@@ -158,7 +163,8 @@ export default function About() {
               curating the content. Follow Josh{" "}
               <a
                 href="https://www.linkedin.com/in/josh-harris-86188983/"
-                className="text-blue-600 hover:underline"
+                target='_blank'
+                className="text-[#4739ba] underline underline-offset-[3px] hover:bg-[#4739ba]/25"
               >
                 here
               </a>
@@ -170,7 +176,8 @@ export default function About() {
               world. Follow Mike{" "}
               <a
                 href="https://www.linkedin.com/in/mkosorukov/"
-                className="text-blue-600 hover:underline"
+                target='_blank'
+                className="text-[#4739ba] underline underline-offset-[3px] hover:bg-[#4739ba]/25"
               >
                 {" "}
                 here
@@ -182,7 +189,8 @@ export default function About() {
               inspiring this idea. Follow Dan{" "}
               <a
                 href="https://www.linkedin.com/in/dan-hock/"
-                className="text-blue-600 hover:underline"
+                target='_blank'
+                className="text-[#4739ba] underline underline-offset-[3px] hover:bg-[#4739ba]/25"
               >
                 here
               </a>
