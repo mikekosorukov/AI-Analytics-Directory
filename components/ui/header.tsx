@@ -42,7 +42,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <Image src={Logo} width="50" alt="logo" className="size-1" />
-            <span className="text-white drop-shadow-lg">AnswerHub</span>
+            <span className="text-white drop-shadow-lg">AI Analytics Tools</span>
           </div>
 
           {/* Suggest Tool Modal */}
