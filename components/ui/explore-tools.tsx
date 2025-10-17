@@ -313,7 +313,7 @@ export default function ToolDetails() {
         </Card>
 
         {/* Idea + competitors row */}
-        <div className="flex flex-col lg:flex-row gap-6 w-full bg-white">
+        <div className="flex flex-col lg:flex-row gap-6 w-full">
           <Card className="lg:w-[66%] bg-white">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-2">Idea behind</h3>
