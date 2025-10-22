@@ -167,17 +167,17 @@ export default function Home() {
 				<section className='relative py-20 px-4 sm:px-6 lg:px-8'>
 					<div className='max-w-4xl mx-auto text-center'>
 						<h1 className='text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
-							Explore emerging
+							Explore emerging{' '}
 							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
 								AI analytics
-							</span>
+							</span> {' '}
 							landscape
 						</h1>
 						<h1 className='text-white text-xl md:text-4xl mb-16 font-semibold'>
-							Find the
+							Find the{' '}
 							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
 								right tool
-							</span>
+							</span>{' '}
 							for the job
 						</h1>
 					</div>
