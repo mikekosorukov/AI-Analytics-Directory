@@ -17,6 +17,8 @@ import Header from "@/components/ui/header";
 import HowTo from "@/components/ui/how-to";
 import About from "@/components/ui/about";
 import Image from 'next/image';
+import { useStore } from './store/store';
+import { TABS } from './types/tabs';
 
 const PAGE_SIZE = 8;
 
@@ -42,6 +44,8 @@ interface TechnicalityLevel {
 }
 
 export default function Home() {
+  const { activeTab, setActiveTab } = useStore()
+
   //data
   const [tools, setTools] = useState<Tool[]>([]);
   const [total, setTotal] = useState<number | null>(null);
@@ -51,7 +55,6 @@ export default function Home() {
   const [technicalityLevels, setTechnicalityLevels] = useState<string[]>([]);
 
   //ui state
-  const [activeTab, setActiveTab] = useState("explore");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTechnicality, setSelectedTechnicality] = useState<string>("all");
 
@@ -159,70 +162,49 @@ export default function Home() {
       {/* Header */}
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl">
-            Explore emerging{" "}
-            <span className="bg-[#E67F44] py-1 px-2 text-shadow-xl">AI analytics</span> landscape
-          </h1>
-          <h1 className="text-white text-xl md:text-4xl mb-16 font-semibold">
-            Find the <span className="bg-[#E67F44] py-1 px-2 text-shadow-xl">right tool</span> for the
-            job
-          </h1>
-        </div>
+      {/* Hero Section. Show only on main page */} 
+			{activeTab === 'explore' ? (
+				<section className='relative py-20 px-4 sm:px-6 lg:px-8'>
+					<div className='max-w-4xl mx-auto text-center'>
+						<h1 className='text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
+							Explore emerging
+							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
+								AI analytics
+							</span>
+							landscape
+						</h1>
+						<h1 className='text-white text-xl md:text-4xl mb-16 font-semibold'>
+							Find the
+							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
+								right tool
+							</span>
+							for the job
+						</h1>
+					</div>
 
-        {/* Badges */}
-        <div className='flex justify-center items-center gap-6'>
-					{[
-						'Founder-curated. No scrape.',
-						'70+ hand-selected tools',
-						'Bi-weekly updates',
-					].map((text) => (
-						<>
-							{' '}
-							<div className='flex items-center gap-3 px-5 py-2.5 border border-[#474858] rounded-[36px]'>
-								<div className='w-6 h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full'>
-									<Check className='w-4 h-4 stroke-[4px]' />
+					{/* Badges */}
+					<div className='flex justify-center items-center gap-6'>
+						{[
+							'Founder-curated. No scrape.',
+							'70+ hand-selected tools',
+							'Bi-weekly updates',
+						].map((text) => (
+							<>
+								<div className='flex items-center gap-3 px-5 py-2.5 border border-[#474858] rounded-[36px]' key={text}>
+									<div className='w-6 h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full'>
+										<Check className='w-4 h-4 stroke-[4px]' />
+									</div>
+									<div className='text-[#BFC5D7]'>{text}</div>
 								</div>
-								<div className='text-[#BFC5D7]'>{text}</div>
-							</div>
-						</>
-					))}
-				</div>
-
-        {/* Navigation Tabs */}
-        {/*<Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="w-full max-w-md mx-auto"
-        >
-          <TabsList className="grid w-full lg:h-16 grid-cols-3 lg:px-2 bg-[#111827]/90 border border-white/20 shadow-inner shadow-[#000]/60 rounded-xl backdrop-blur-md">
-            <TabsTrigger
-              value="explore"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold"
-            >
-              Explore Tools
-            </TabsTrigger>
-            <TabsTrigger
-              value="howto"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold"
-            >
-              How To Use
-            </TabsTrigger>
-            <TabsTrigger
-              value="about"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold"
-            >
-              About
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>*/}
-      </section>
+							</>
+						))}
+					</div>
+				</section>
+			) : null}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={(tab) => setActiveTab(tab as TABS)}>
           {/* Explore Tab */}
           <TabsContent value="explore" className="space-y-8">
             {/* Filter Section */}
