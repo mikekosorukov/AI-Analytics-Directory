@@ -164,10 +164,10 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl">
             Explore emerging{" "}
-            <span className="text-[#e67f43]">AI analytics</span> landscape
+            <span className="bg-[#CE7E49] py-1 px-2 text-shadow-xl">AI analytics</span> landscape
           </h1>
           <h1 className="text-white text-xl md:text-4xl mb-16 font-semibold">
-            Find the <span className="text-[#e67f43]">right tool</span> for the
+            Find the <span className="bg-[#CE7E49] py-1 px-2 text-shadow-xl">right tool</span> for the
             job
           </h1>
         </div>
