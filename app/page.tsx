@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Bot, ExternalLink, Loader2 } from "lucide-react";
+import { Bot, ExternalLink, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -164,16 +164,35 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl">
             Explore emerging{" "}
-            <span className="bg-[#CE7E49] py-1 px-2 text-shadow-xl">AI analytics</span> landscape
+            <span className="bg-[#E67F44] py-1 px-2 text-shadow-xl">AI analytics</span> landscape
           </h1>
           <h1 className="text-white text-xl md:text-4xl mb-16 font-semibold">
-            Find the <span className="bg-[#CE7E49] py-1 px-2 text-shadow-xl">right tool</span> for the
+            Find the <span className="bg-[#E67F44] py-1 px-2 text-shadow-xl">right tool</span> for the
             job
           </h1>
         </div>
 
+        {/* Badges */}
+        <div className='flex justify-center items-center gap-6'>
+					{[
+						'Founder-curated. No scrape.',
+						'70+ hand-selected tools',
+						'Bi-weekly updates',
+					].map((text) => (
+						<>
+							{' '}
+							<div className='flex items-center gap-3 px-5 py-2.5 border border-[#474858] rounded-[36px]'>
+								<div className='w-6 h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full'>
+									<Check className='w-4 h-4 stroke-[4px]' />
+								</div>
+								<div className='text-[#BFC5D7]'>{text}</div>
+							</div>
+						</>
+					))}
+				</div>
+
         {/* Navigation Tabs */}
-        <Tabs
+        {/*<Tabs
           value={activeTab}
           onValueChange={setActiveTab}
           className="w-full max-w-md mx-auto"
@@ -198,7 +217,7 @@ export default function Home() {
               About
             </TabsTrigger>
           </TabsList>
-        </Tabs>
+        </Tabs>*/}
       </section>
 
       {/* Main Content */}
