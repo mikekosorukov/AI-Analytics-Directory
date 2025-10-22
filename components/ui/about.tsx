@@ -7,7 +7,7 @@ const IBM = IBM_Plex_Sans({ subsets: ['latin'] });
 
 export default function About() {
   return (
-    <div className={`space-y-8 bg-[#f5f5f5] p-6 rounded-xl font-serif selection-custom text-lg ${IBM.className}`}>
+    <div className={`space-y-8 mt-16 bg-[#f5f5f5] p-6 rounded-xl font-serif selection-custom text-lg ${IBM.className}`}>
       <div className="bg-white rounded-xl p-6 lg:px-20 xl:px-40 shadow-lg border text-black border-white/10 space-y-8">
         {/* Reasons for existing */}
         <section>
