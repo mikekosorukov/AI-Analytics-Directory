@@ -297,9 +297,9 @@ export default function Home() {
                     key={tool.tool_id}
                     className="relative p-4 rounded-lg group hover:shadow-2xl transition-all duration-300 bg-[#111827]/70 border border-white/10 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer"
                   >
-                    <Link href={`/tools/${tool.tool_id}`} className="p-6">
+                    <Link href={`/tools/${tool.tool_id}`} className="px-6">
                       <div className="flex items-start justify-between mb-4">
-                        <div className="relative z-50 w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md">
+                        <div className="relative z-50 w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
                          {tool.logo_path ? (
 														<Image
 															fill
@@ -353,7 +353,7 @@ export default function Home() {
                               tool.category.map((catId, index) => (
                                 <span
                                   key={index}
-                                  className="bg-gray-500 p-1 px-2 rounded-lg border border-gray-300 text-[14px]"
+                                  className="bg-gray-500 p-1 px-2 rounded-lg border border-gray-300 text-xs"
                                 >
                                   {categories[catId] || "Unknown Category"}
                                 </span>
@@ -361,7 +361,7 @@ export default function Home() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        {/*<div className="flex items-center gap-2">
                           <h1 className="font-semibold text-xs">
                             Technicality
                           </h1>
@@ -386,7 +386,7 @@ export default function Home() {
                               />
                             </div>
                           </div>
-                        </div>
+                        </div>*/}
                       </Link>
                     </Link>
                   </div>
