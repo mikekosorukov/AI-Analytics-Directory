@@ -41,8 +41,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <Image src={Logo} width="50" alt="logo" className="size-1" />
-            <span className="text-white drop-shadow-lg">AI Analytics Tools</span>
+            <Image src={Logo} width="40" alt="logo" />
+            <span className="text-white drop-shadow-lg">AI Analytics Hub</span>
           </div>
 
           {/* Suggest Tool Modal */}
