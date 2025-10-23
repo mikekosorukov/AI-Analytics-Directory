@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useLayoutEffect, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Bot, ExternalLink, Loader2, Check } from "lucide-react";
+import { Bot, ExternalLink, Loader2, Check, ChevronLeft, ChevronRight, Funnel } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -62,6 +62,41 @@ export default function Home() {
   const [isPageLoading, setIsPageLoading] = useState(false);
 
   const hasMore = total === null ? false : tools?.length < total;
+
+  const containerRef = useRef<HTMLDivElement>(null);
+	const [canScrollLeft, setCanScrollLeft] = useState(false);
+	const [canScrollRight, setCanScrollRight] = useState(false);
+
+	const updateScrollButtons = () => {
+		if (!containerRef.current) return;
+		const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+		setCanScrollLeft(scrollLeft > 0);
+		setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
+	};
+
+	useLayoutEffect(() => {
+		updateScrollButtons();
+	}, [categories]);
+
+	useEffect(() => {
+		const container = containerRef.current;
+		if (!container) return;
+
+		container.addEventListener('scroll', updateScrollButtons);
+		window.addEventListener('resize', updateScrollButtons);
+
+		return () => {
+			container.removeEventListener('scroll', updateScrollButtons);
+			window.removeEventListener('resize', updateScrollButtons);
+		};
+	}, [categories]);
+
+	const scrollLeftFunc = () => {
+		containerRef.current?.scrollBy({ left: -400, behavior: 'smooth' });
+	};
+	const scrollRightFunc = () => {
+		containerRef.current?.scrollBy({ left: 400, behavior: 'smooth' });
+	};
 
   const buildQuery = useCallback(() => {
     let query = supabase
@@ -208,61 +243,61 @@ export default function Home() {
           {/* Explore Tab */}
           <TabsContent value="explore" className="space-y-8">
             {/* Filter Section */}
-            <div className="bg-[#0f1116]/80 rounded-xl p-6 shadow-lg border border-white/10">
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Category Filter */}
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent side='bottom'>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {Object.entries(categories).map(([id, name]) => (
-                      <SelectItem key={id} value={id}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {/* Technicality Filter */}
-                <Select
-                  value={selectedTechnicality}
-                  onValueChange={setSelectedTechnicality}
-                >
-                  <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
-                    <SelectValue placeholder="Select Technicality" />
-                  </SelectTrigger>
-                  <SelectContent side='bottom'>
-                    <SelectItem value="all">All Technicality Levels</SelectItem>
-                    {technicalityLevels.map((level) => (
-                      <SelectItem
-                        key={level}
-                        value={level}
-                        className="capitalize"
-                      >
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {/* Reset Filters Button */}
-                <Button
-                  variant="outline"
-                  className="bg-blue-950 text-white border-white/20"
-                  onClick={() => {
-                    setSelectedCategory("all");
-                    setSelectedTechnicality("all");
-                  }}
-                >
-                  Reset Filters
-                </Button>
-              </div>
-            </div>
+            <div className='relative bg-[#0f1116]/80 rounded-xl p-6 shadow-lg border border-white/10'>
+							{/* Scrollable Container */}
+							<div
+								className='flex gap-4 overflow-x-hidden py-2 relative z-10 pr-40'
+								ref={containerRef}
+							>
+								{Object.entries(categories).map(([id, name]) => (
+									<div
+										key={id}
+										className={`flex items-center whitespace-nowrap gap-3 px-5 py-2.5 border border-[#474858] text-[#BFC5D7] bg-[#111827] rounded-xl transition-all duration-300 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer ${
+											selectedCategory === id ? '!text-white bg-[#6366F1]' : ''
+										}`}
+										onClick={() => setSelectedCategory(id)}
+									>
+										{name}
+									</div>
+								))}
+							</div>
+							{canScrollLeft && (
+								<div className='absolute left-0 top-0 h-full flex items-center rounded-xl bg-gradient-to-r from-[#0f1116] via-[#0f1116]/95 to-[#0f1116]/0 pl-4 pr-20 z-20'>
+									<button
+										onClick={scrollLeftFunc}
+										className='bg-[#0f1116]/90 backdrop-blur-sm p-1 rounded-full shadow-sm border border-white/10 hover:bg-[#0f1116]/95 shrink-0'
+									>
+										<ChevronLeft className='w-7 h-7 text-white stroke-2' />
+									</button>
+								</div>
+							)}
+							<div className='absolute right-0 top-0 h-full flex items-center rounded-xl gap-4 pr-4 bg-gradient-to-l from-[#0f1116] via-[#0f1116]/95 to-[#0f1116]/0 pl-8 z-20'>
+								{canScrollRight && (
+									<button
+										onClick={scrollRightFunc}
+										className='bg-[#0f1116]/90 backdrop-blur-sm p-1 rounded-full shadow-sm border border-white/10 hover:bg-[#0f1116]/95 shrink-0'
+									>
+										<ChevronRight className='w-7 h-7 text-white stroke-2' />
+									</button>
+								)}
+								<div className='flex items-center gap-4'>
+									<div className='text-[#777D8F]'>
+										{isInitialLoading
+											? 'Loading...'
+                      :
+                      <div className='flex items-center gap-2'>
+                        <Funnel className='w-5 h-5' />
+                        <div className='flex'>
+                          {tools?.length} results
+                        </div>
+                      </div>}
+									</div>
+									<button className='text-white hover:text-[#6366F1] transition' onClick={() => setSelectedCategory('all')}>
+										Clear
+									</button>
+								</div>
+							</div>
+						</div>
 
             {/* Tools Grid */}
             {isInitialLoading ? (
