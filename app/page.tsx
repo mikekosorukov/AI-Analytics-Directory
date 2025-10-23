@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useLayoutEffect, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Bot, ExternalLink, Loader2, Check } from "lucide-react";
+import { Bot, ExternalLink, Loader2, Check, ChevronLeft, ChevronRight, Funnel, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -19,6 +19,7 @@ import About from "@/components/ui/about";
 import Image from 'next/image';
 import { useStore } from './store/store';
 import { TABS } from './types/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const PAGE_SIZE = 8;
 
@@ -26,7 +27,7 @@ const PAGE_SIZE = 8;
 interface Tool {
   tool_id: string;
   tool_name: string;
-  category: string[]; // Array of UUIDs
+  category: { category_id: string }[];
   technicality_level: string;
   short_description: string;
   url: string;
@@ -35,8 +36,9 @@ interface Tool {
 }
 
 interface Category {
-  category_id: string;
-  category_name: string;
+	category_id: string;
+	category_name: string;
+	category_description: string;
 }
 
 interface TechnicalityLevel {
@@ -51,7 +53,7 @@ export default function Home() {
   const [total, setTotal] = useState<number | null>(null);
 
   //meta
-  const [categories, setCategories] = useState<Record<string, string>>({});
+  const [categories, setCategories] = useState<Category[]>([]);
   const [technicalityLevels, setTechnicalityLevels] = useState<string[]>([]);
 
   //ui state
@@ -62,6 +64,53 @@ export default function Home() {
   const [isPageLoading, setIsPageLoading] = useState(false);
 
   const hasMore = total === null ? false : tools?.length < total;
+
+  const howToRef = useRef<HTMLDivElement>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+	const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  
+  const scrollToCategorization = () => {
+		if (!howToRef.current) return;
+
+		const categorizationEl =
+			howToRef.current.querySelector<HTMLDivElement>('#categorization');
+		if (categorizationEl) {
+			categorizationEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+	};
+
+	const updateScrollButtons = () => {
+		if (!containerRef.current) return;
+		const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+		setCanScrollLeft(scrollLeft > 0);
+		setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
+	};
+
+	useLayoutEffect(() => {
+		updateScrollButtons();
+	}, [categories]);
+
+	useEffect(() => {
+		const container = containerRef.current;
+		if (!container) return;
+
+		container.addEventListener('scroll', updateScrollButtons);
+		window.addEventListener('resize', updateScrollButtons);
+
+		return () => {
+			container.removeEventListener('scroll', updateScrollButtons);
+			window.removeEventListener('resize', updateScrollButtons);
+		};
+	}, [categories]);
+
+	const scrollLeftFunc = () => {
+		containerRef.current?.scrollBy({ left: -400, behavior: 'smooth' });
+	};
+	const scrollRightFunc = () => {
+		containerRef.current?.scrollBy({ left: 400, behavior: 'smooth' });
+	};
 
   const buildQuery = useCallback(() => {
     let query = supabase
@@ -125,19 +174,12 @@ export default function Home() {
     useEffect(() => {
     (async () => {
       const { data: categoriesData, error: categoriesError } = await supabase
-        .from("categories")
-        .select("category_id, category_name");
+				.from('categories')
+				.select('category_id, category_name, category_description');
       if (categoriesError) {
         console.error("Error fetching categories:", categoriesError);
       } else {
-        const map = (categoriesData || []).reduce(
-          (acc: Record<string, string>, c: Category) => {
-            acc[c.category_id] = c.category_name;
-            return acc;
-          },
-          {}
-        );
-        setCategories(map);
+        setCategories(categoriesData);
       }
 
       const { data: technicalityData, error: technicalityError } = await supabase
@@ -208,61 +250,77 @@ export default function Home() {
           {/* Explore Tab */}
           <TabsContent value="explore" className="space-y-8">
             {/* Filter Section */}
-            <div className="bg-[#0f1116]/80 rounded-xl p-6 shadow-lg border border-white/10">
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Category Filter */}
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent side='bottom'>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {Object.entries(categories).map(([id, name]) => (
-                      <SelectItem key={id} value={id}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {/* Technicality Filter */}
-                <Select
-                  value={selectedTechnicality}
-                  onValueChange={setSelectedTechnicality}
-                >
-                  <SelectTrigger className="w-full sm:w-1/2 bg-[#111827] text-white border-white/20">
-                    <SelectValue placeholder="Select Technicality" />
-                  </SelectTrigger>
-                  <SelectContent side='bottom'>
-                    <SelectItem value="all">All Technicality Levels</SelectItem>
-                    {technicalityLevels.map((level) => (
-                      <SelectItem
-                        key={level}
-                        value={level}
-                        className="capitalize"
-                      >
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {/* Reset Filters Button */}
-                <Button
-                  variant="outline"
-                  className="bg-blue-950 text-white border-white/20"
-                  onClick={() => {
-                    setSelectedCategory("all");
-                    setSelectedTechnicality("all");
-                  }}
-                >
-                  Reset Filters
-                </Button>
-              </div>
-            </div>
+            <div className='relative bg-[#0f1116]/80 rounded-xl p-6 shadow-lg border border-white/10'>
+							{/* Scrollable Container */}
+							<div
+								className='flex gap-4 overflow-x-hidden py-2 relative z-10 pr-40'
+								ref={containerRef}
+							>
+                <TooltipProvider>
+                  {categories.map(({category_id, category_name, category_description}) => (
+                    <Tooltip key={category_id}>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={`flex items-center whitespace-nowrap gap-3 px-5 py-2.5 border border-[#474858] text-[#BFC5D7] bg-[#111827] rounded-xl transition-all duration-300 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer ${
+                            selectedCategory === category_id ? '!text-white bg-[#6366F1]' : ''
+                          }`}
+                          onClick={() => setSelectedCategory(category_id)}
+                        >
+                          {category_name}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className='max-w-[350px] border border-[#474858] text-[#A7ABCB] bg-[#111826]'>
+                        <div className='flex flex-col gap-2 p-2'>
+                          <Info className='w-5 h-5 text-[#80B296]'/>
+                          {category_description ?? 'Empty description'}
+                          <div className='text-[#6366F1] shrink-0 underline underline-offset-[3px] cursor-pointer'
+                            onClick={() => {
+																setActiveTab('howto');
+																setTimeout(() => scrollToCategorization(), 50);
+															}}>Learn more about Categorization</div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                </TooltipProvider>
+							</div>
+							{canScrollLeft && (
+								<div className='absolute left-0 top-0 h-full flex items-center rounded-xl bg-gradient-to-r from-[#0f1116] via-[#0f1116]/95 to-[#0f1116]/0 pl-4 pr-20 z-20'>
+									<button
+										onClick={scrollLeftFunc}
+										className='bg-[#0f1116]/90 backdrop-blur-sm p-1 rounded-full shadow-sm border border-white/10 hover:bg-[#0f1116]/95 shrink-0'
+									>
+										<ChevronLeft className='w-7 h-7 text-white stroke-2' />
+									</button>
+								</div>
+							)}
+							<div className='absolute right-0 top-0 h-full flex items-center rounded-xl gap-4 pr-4 bg-gradient-to-l from-[#0f1116] via-[#0f1116]/95 to-[#0f1116]/0 pl-8 z-20'>
+								{canScrollRight && (
+									<button
+										onClick={scrollRightFunc}
+										className='bg-[#0f1116]/90 backdrop-blur-sm p-1 rounded-full shadow-sm border border-white/10 hover:bg-[#0f1116]/95 shrink-0'
+									>
+										<ChevronRight className='w-7 h-7 text-white stroke-2' />
+									</button>
+								)}
+								<div className='flex items-center gap-4'>
+									<div className='text-[#777D8F]'>
+										{isInitialLoading
+											? 'Loading...'
+                      :
+                      <div className='flex items-center gap-2'>
+                        <Funnel className='w-5 h-5' />
+                        <div className='flex'>
+                          {tools?.length} results
+                        </div>
+                      </div>}
+									</div>
+									<button className='text-white hover:text-[#6366F1] transition' onClick={() => setSelectedCategory('all')}>
+										Clear
+									</button>
+								</div>
+							</div>
+						</div>
 
             {/* Tools Grid */}
             {isInitialLoading ? (
@@ -331,15 +389,19 @@ export default function Home() {
                         <div className="flex items-center gap-2">
                           <h1 className="font-semibold text-xs">Category</h1>
                           <div className="flex gap-2 flex-wrap">
-                            {Array.isArray(tool.category) &&
-                              tool.category.map((catId, index) => (
+                          {Array.isArray(tool.category) &&
+                            tool.category.map(({ category_id }, index) => {
+                              const category = categories.find(cat => cat.category_id === category_id);
+
+                              return (
                                 <span
                                   key={index}
                                   className="bg-gray-500 p-1 px-2 rounded-lg border border-gray-300 text-xs"
                                 >
-                                  {categories[catId] || "Unknown Category"}
+                                  {category?.category_name || "Unknown Category"}
                                 </span>
-                              ))}
+                              );
+                            })}
                           </div>
                         </div>
 
@@ -398,7 +460,7 @@ export default function Home() {
 
           {/* How To Tab */}
           <TabsContent value="howto" className="space-y-8">
-            <HowTo />
+            <HowTo ref={howToRef} />
           </TabsContent>
 
           {/* About Tab */}
