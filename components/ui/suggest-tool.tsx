@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
 
 export default function SuggestToolForm() {
 	const [formData, setFormData] = useState({
@@ -26,7 +27,14 @@ export default function SuggestToolForm() {
 		if (!formData.tool_name || !formData.description || !formData.website_link)
 			return;
 
-		await supabase.from('Tool_suggestions').insert(formData);
+		const res = await supabase.from('Tool_suggestions').insert(formData);
+
+		if (res?.status === 201) {
+			toast({
+				title: '✅ Tool submitted',
+				description: 'Your suggestion has been added successfully!',
+			});
+		}
 
 		// reset
 		setFormData({ tool_name: '', description: '', website_link: '' });
