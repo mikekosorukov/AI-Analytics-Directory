@@ -8,18 +8,15 @@ import HowTo from "@/components/ui/how-to";
 import About from "@/components/ui/about";
 import Header from "@/components/ui/header";
 import { Check } from 'lucide-react';
+import { useStore } from '@/app/store/store';
+import { TABS } from '@/app/types/tabs';
 
 export default function Tools() {
-  const [activeTab, setActiveTab] = useState("explore"); // Set "explore" as default active tab
+  const { activeTab, setActiveTab } = useStore();
   const router = useRouter();
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value); // Update active tab for all tabs, including "explore"
-  };
-
-  const handleExploreClick = () => {
-    console.log("Explore Tools clicked, navigating to homepage...");
-    router.push("/"); 
+    setActiveTab(value as TABS); // Update active tab for all tabs, including "explore"
   };
 
   return (
