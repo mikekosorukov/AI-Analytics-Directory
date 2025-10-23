@@ -190,11 +190,11 @@ export default function Home() {
 							'Bi-weekly updates',
 						].map((text) => (
 							<>
-								<div className='flex items-center gap-3 px-5 py-2.5 border border-[#474858] rounded-[36px]' key={text}>
+								<div className='flex items-center gap-3 px-2.5 py-2 border border-[#474858] rounded-[36px]' key={text}>
 									<div className='w-6 h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full'>
 										<Check className='w-4 h-4 stroke-[4px]' />
 									</div>
-									<div className='text-[#BFC5D7]'>{text}</div>
+									<div className='text-[#BFC5D7] text-[15px]'>{text}</div>
 								</div>
 							</>
 						))}
@@ -281,7 +281,7 @@ export default function Home() {
                   >
                     <Link href={`/tools/${tool.tool_id}`} className="px-6">
                       <div className="flex items-start justify-between mb-4">
-                        <div className="relative z-50 w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
+                        <div className="relative w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
                          {tool.logo_path ? (
 														<Image
 															fill

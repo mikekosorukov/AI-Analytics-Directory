@@ -8,8 +8,11 @@ import SuggestedTools from "@/components/ui/suggest-tool";
 import Image from "next/image";
 import Logo from "@/assets/logo.png";
 import { TABS } from '@/app/types/tabs';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Header() {
+  const pathname = usePathname()
+  const router = useRouter();
   const { activeTab, setActiveTab } = useStore()
   const [showSuggest, setShowSuggest] = useState(false);
   const suggestRef = useRef<HTMLDivElement | null>(null);
@@ -41,6 +44,12 @@ export default function Header() {
     };
   }, [showSuggest]);
 
+  const handleExploreClick = () => {
+    if (pathname !== "/") {
+      router.push('/');
+    }
+  }
+
   return (
 		<header className='border-b border-white/10 bg-[#111827]/90 backdrop-blur-md sticky top-0 z-50 shadow-md'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -53,7 +62,11 @@ export default function Header() {
 
           <Tabs value={activeTab} onValueChange={(tab) => setActiveTab(tab as TABS)}>
 						<TabsList className='bg-transparent'>
-							<TabsTrigger value='explore' className={TAB_CLASSNAMES}>
+              <TabsTrigger
+								value='explore'
+								className={TAB_CLASSNAMES}
+								onClick={handleExploreClick}
+							>
 								Tool list
 							</TabsTrigger>
 							<TabsTrigger value='howto' className={TAB_CLASSNAMES}>
@@ -71,7 +84,7 @@ export default function Header() {
 							ref={suggestRef}
 							className='absolute top-16 w-[90%] md:w-[70%] lg:w-[45%] xl:w-[35%] min-[1440px]:w-[32%] 2xl:w-[30%] lg:right-0 md:left-[200px] lg:left-[520px] xl:left-[800px] min-[1440px]:left-[880px] 2xl:left-[1050px]'
 						>
-							<SuggestedTools />
+							<SuggestedTools setShowSuggest={setShowSuggest} />
 						</div>
 					)}
 

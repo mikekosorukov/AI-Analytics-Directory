@@ -8,7 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 
-export default function SuggestToolForm() {
+export default function SuggestToolForm({
+	setShowSuggest,
+}: {
+	setShowSuggest: (state: boolean) => void;
+}) {
 	const [formData, setFormData] = useState({
 		tool_name: '',
 		description: '',
@@ -30,10 +34,14 @@ export default function SuggestToolForm() {
 		const res = await supabase.from('Tool_suggestions').insert(formData);
 
 		if (res?.status === 201) {
-			toast({
-				title: '✅ Tool submitted',
-				description: 'Your suggestion has been added successfully!',
-			});
+			setShowSuggest(false);
+
+			setTimeout(() => {
+				toast({
+					title: '✅ Tool submitted',
+					description: 'Your suggestion has been added successfully!',
+				});
+			}, 500);
 		}
 
 		// reset

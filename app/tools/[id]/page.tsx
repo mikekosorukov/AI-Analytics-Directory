@@ -7,18 +7,16 @@ import ExploreTools from "@/components/ui/explore-tools";
 import HowTo from "@/components/ui/how-to";
 import About from "@/components/ui/about";
 import Header from "@/components/ui/header";
+import { Check } from 'lucide-react';
+import { useStore } from '@/app/store/store';
+import { TABS } from '@/app/types/tabs';
 
 export default function Tools() {
-  const [activeTab, setActiveTab] = useState("explore"); // Set "explore" as default active tab
+  const { activeTab, setActiveTab } = useStore();
   const router = useRouter();
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value); // Update active tab for all tabs, including "explore"
-  };
-
-  const handleExploreClick = () => {
-    console.log("Explore Tools clicked, navigating to homepage...");
-    router.push("/"); 
+    setActiveTab(value as TABS); // Update active tab for all tabs, including "explore"
   };
 
   return (
@@ -27,47 +25,42 @@ export default function Tools() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl">
-            Explore emerging{" "}
-            <span className="text-[#e67f43]">AI analytics</span> landscape
-          </h1>
-          <h1 className="text-white text-xl md:text-4xl mb-16 font-semibold">
-            Find the <span className="text-[#e67f43]">right tool</span> for the
-            job
-          </h1>
-        </div>
+      <section className='relative py-20 px-4 sm:px-6 lg:px-8'>
+					<div className='max-w-4xl mx-auto text-center'>
+						<h1 className='text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
+							Explore emerging{' '}
+							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
+								AI analytics
+							</span> {' '}
+							landscape
+						</h1>
+						<h1 className='text-white text-xl md:text-4xl mb-16 font-semibold'>
+							Find the{' '}
+							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
+								right tool
+							</span>{' '}
+							for the job
+						</h1>
+					</div>
 
-        {/* Navigation Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={handleTabChange}
-          className="w-full max-w-md mx-auto"
-        >
-          <TabsList className="grid w-full lg:h-16 grid-cols-3 lg:px-2 bg-[#111827]/90 border border-white/20 shadow-inner shadow-[#000]/60 rounded-xl backdrop-blur-md">
-            <TabsTrigger
-              value="explore"
-              onClick={handleExploreClick}
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
-            >
-              Explore Tools
-            </TabsTrigger>
-            <TabsTrigger
-              value="howto"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
-            >
-              How to
-            </TabsTrigger>
-            <TabsTrigger
-              value="about"
-              className="lg:h-11 text-gray-300 rounded-lg transition-colors duration-200 font-medium data-[state=active]:bg-[#6366f1] data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg data-[state=active]:shadow-[#6366f1]/40"
-            >
-              About
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </section>
+					{/* Badges */}
+					<div className='flex justify-center items-center gap-6'>
+						{[
+							'Founder-curated. No scrape.',
+							'70+ hand-selected tools',
+							'Bi-weekly updates',
+						].map((text) => (
+							<>
+								<div className='flex items-center gap-3 px-5 py-2.5 border border-[#474858] rounded-[36px]' key={text}>
+									<div className='w-6 h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full'>
+										<Check className='w-4 h-4 stroke-[4px]' />
+									</div>
+									<div className='text-[#BFC5D7]'>{text}</div>
+								</div>
+							</>
+						))}
+					</div>
+				</section>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
