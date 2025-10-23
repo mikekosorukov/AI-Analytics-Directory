@@ -281,7 +281,7 @@ export default function Home() {
                   >
                     <Link href={`/tools/${tool.tool_id}`} className="px-6">
                       <div className="flex items-start justify-between mb-4">
-                        <div className="relative z-50 w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
+                        <div className="relative w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
                          {tool.logo_path ? (
 														<Image
 															fill
