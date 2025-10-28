@@ -33,6 +33,7 @@ interface Tool {
   url: string;
   rls: boolean;
   logo_path: string;
+  slug: string;
 }
 
 interface Category {
@@ -116,7 +117,7 @@ export default function Home() {
     let query = supabase
       .from("tools_updated")
       .select(
-        "tool_id, tool_name, category, technicality_level, short_description, url, rls, logo_path",
+        "tool_id, tool_name, category, technicality_level, short_description, url, rls, logo_path, slug",
         { count: "exact" }
       )
       .eq("rls", true)
@@ -334,10 +335,10 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 {tools.map((tool) => (
                   <div
-                    key={tool.tool_id}
+                    key={tool.slug}
                     className="relative p-4 rounded-lg group hover:shadow-2xl transition-all duration-300 bg-[#111827]/70 border border-white/10 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer"
                   >
-                    <Link href={`/tools/${tool.tool_id}`} className="px-6">
+                    <Link href={`/tools/${tool.slug}`} className="px-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="relative w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
                          {tool.logo_path ? (

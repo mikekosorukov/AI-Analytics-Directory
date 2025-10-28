@@ -52,7 +52,7 @@ const COMMUNITY_ICONS: Record<string, StaticImageData> = {
 
 export default function ToolDetails() {
   const params = useParams();
-  const { id } = params;
+  const { slug } = params;
   const [toolData, setToolData] = useState<ToolData | null>(null);
   const [communities, setCommunities] = useState<Community[]>([]);
   const [competitorsData, setCompetitorsData] = useState<Competitor[]>([]);
@@ -60,7 +60,7 @@ export default function ToolDetails() {
 
   // Fetch tool details, communities, and competitors
   useEffect(() => {
-    if (!id) return;
+    if (!slug) return;
 
     const fetchToolAndCommunities = async () => {
       setLoading(true);
@@ -69,7 +69,7 @@ export default function ToolDetails() {
       const { data: tool, error: toolError } = await supabase
         .from("tools_updated")
         .select("*")
-        .eq("tool_id", id)
+        .eq("slug", slug)
         .eq("rls", true)
         .single();
 
@@ -126,7 +126,7 @@ export default function ToolDetails() {
     };
 
     fetchToolAndCommunities();
-  }, [id]);
+  }, [slug]);
 
   // Safe parse function for arrays
   const safeParse = (val: any): string[] => {
