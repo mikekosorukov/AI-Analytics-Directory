@@ -107,7 +107,7 @@ export default function Home() {
 	}, [categories]);
 
 	const scrollLeftFunc = () => {
-		containerRef.current?.scrollBy({ left: -400, behavior: 'smooth' });
+		containerRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
 	};
 	const scrollRightFunc = () => {
 		containerRef.current?.scrollBy({ left: 400, behavior: 'smooth' });
