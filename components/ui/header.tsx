@@ -9,6 +9,7 @@ import Image from "next/image";
 import Logo from "@/assets/logo.png";
 import { TABS } from '@/app/types/tabs';
 import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Header() {
   const pathname = usePathname()
@@ -55,10 +56,10 @@ export default function Header() {
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
 				<div className='flex justify-between items-center h-16'>
 					{/* Logo */}
-					<div className='flex items-center space-x-2'>
+					<Link href={'/'} className='flex items-center space-x-2'>
 						<Image src={Logo} width='40' alt='logo' />
 						<span className='text-white drop-shadow-lg'>AI Analytics Hub</span>
-					</div>
+					</Link>
 
           <Tabs value={activeTab} onValueChange={(tab) => setActiveTab(tab as TABS)}>
 						<TabsList className='bg-transparent'>
