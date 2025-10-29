@@ -107,7 +107,7 @@ export default function Home() {
 	}, [categories]);
 
 	const scrollLeftFunc = () => {
-		containerRef.current?.scrollBy({ left: -400, behavior: 'smooth' });
+		containerRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
 	};
 	const scrollRightFunc = () => {
 		containerRef.current?.scrollBy({ left: 400, behavior: 'smooth' });
@@ -312,7 +312,7 @@ export default function Home() {
                       <div className='flex items-center gap-2'>
                         <Funnel className='w-5 h-5' />
                         <div className='flex'>
-                          {tools?.length} results
+                          {total} results
                         </div>
                       </div>}
 									</div>
