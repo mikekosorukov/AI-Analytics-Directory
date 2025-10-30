@@ -27,7 +27,7 @@ const PAGE_SIZE = 8;
 interface Tool {
   tool_id: string;
   tool_name: string;
-  category: { category_id: string }[];
+  category: string[];
   technicality_level: string;
   short_description: string;
   url: string;
@@ -391,7 +391,7 @@ export default function Home() {
                           <h1 className="font-semibold text-xs">Category</h1>
                           <div className="flex gap-2 flex-wrap">
                           {Array.isArray(tool.category) &&
-                            tool.category.map(({ category_id }, index) => {
+                            tool.category.map((category_id, index) => {
                               const category = categories.find(cat => cat.category_id === category_id);
 
                               return (
