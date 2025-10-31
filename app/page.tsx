@@ -232,14 +232,12 @@ export default function Home() {
 							'70+ hand-selected tools',
 							'Bi-weekly updates',
 						].map((text) => (
-							<>
-								<div className='flex items-center gap-3 px-2.5 py-2 border border-[#474858] rounded-[36px]' key={text}>
-									<div className='w-6 h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full'>
-										<Check className='w-4 h-4 stroke-[4px]' />
-									</div>
-									<div className='text-[#BFC5D7] text-[15px]'>{text}</div>
+							<div className='flex items-center gap-3 px-2.5 py-2 border border-[#474858] rounded-[36px]' key={text}>
+								<div className='w-6 h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full'>
+									<Check className='w-4 h-4 stroke-[4px]' />
 								</div>
-							</>
+								<div className='text-[#BFC5D7] text-[15px]'>{text}</div>
+							</div>
 						))}
 					</div>
 				</section>
@@ -258,7 +256,7 @@ export default function Home() {
 								ref={containerRef}
 							>
                 <TooltipProvider>
-                  {categories.map(({category_id, category_name, category_description}) => (
+                  {categories?.map(({category_id, category_name, category_description}) => (
                     <Tooltip key={category_id}>
                       <TooltipTrigger asChild>
                         <div
@@ -333,7 +331,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                {tools.map((tool) => (
+                {tools?.map((tool) => (
                   <div
                     key={tool.slug}
                     className="relative p-4 rounded-lg group hover:shadow-2xl transition-all duration-300 bg-[#111827]/70 border border-white/10 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer"
@@ -392,7 +390,7 @@ export default function Home() {
                           <div className="flex gap-2 flex-wrap">
                           {Array.isArray(tool.category) &&
                             tool.category.map((category_id, index) => {
-                              const category = categories.find(cat => cat.category_id === category_id);
+                              const category = categories?.find(cat => cat.category_id === category_id);
 
                               return (
                                 <span
