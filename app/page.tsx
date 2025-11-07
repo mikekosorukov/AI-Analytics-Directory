@@ -371,20 +371,20 @@ export default function Home() {
                       </div>
 
                       <Link
-                        href={`/tools/${tool.tool_id}`}
+                        href={`/tools/${tool.slug}`}
                         className="font-bold text-lg text-white mb-2 drop-shadow-sm"
                       >
                         {tool.tool_name}
                       </Link>
                       <Link
-                        href={`/tools/${tool.tool_id}`}
+                        href={`/tools/${tool.slug}`}
                         className="text-gray-200 text-sm mb-4 line-clamp-3"
                       >
                         {tool.short_description}
                       </Link>
 
                       <Link
-                        href={`/tools/${tool.tool_id}`}
+                        href={`/tools/${tool.slug}`}
                         className="flex flex-col items-start justify-center gap-3 text-white"
                       >
                         <div className="flex items-center gap-2">
