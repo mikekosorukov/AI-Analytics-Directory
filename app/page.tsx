@@ -334,11 +334,12 @@ export default function Home() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 {tools.map((tool) => (
-                  <div
+                  <Link
+                    href={`/tools/${tool.slug}`}
                     key={tool.slug}
                     className="relative p-4 rounded-lg group hover:shadow-2xl transition-all duration-300 bg-[#111827]/70 border border-white/10 hover:border-[#6366f1] hover:-translate-y-1 hover:cursor-pointer"
                   >
-                    <Link href={`/tools/${tool.slug}`} className="px-6">
+                    <div className='py-6'>
                       <div className="flex items-start justify-between mb-4">
                         <div className="relative w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
                          {tool.logo_path ? (
@@ -359,32 +360,29 @@ export default function Home() {
                           className="group"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Link
+                          <a
                             href={`${tool.url}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#0f1116]/50 text-gray-300 group-hover:bg-gray-300 group-hover:text-black"
                           >
                             <ExternalLink className="h-4 w-4 hover:bg-gray-300 hover:text-black" />
-                          </Link>
+                          </a>
                         </Button>
                       </div>
 
-                      <Link
-                        href={`/tools/${tool.tool_id}`}
+                      <div
                         className="font-bold text-lg text-white mb-2 drop-shadow-sm"
                       >
                         {tool.tool_name}
-                      </Link>
-                      <Link
-                        href={`/tools/${tool.tool_id}`}
+                      </div>
+                      <div
                         className="text-gray-200 text-sm mb-4 line-clamp-3"
                       >
                         {tool.short_description}
-                      </Link>
+                      </div>
 
-                      <Link
-                        href={`/tools/${tool.tool_id}`}
+                      <div
                         className="flex flex-col items-start justify-center gap-3 text-white"
                       >
                         <div className="flex items-center gap-2">
@@ -432,9 +430,9 @@ export default function Home() {
                             </div>
                           </div>
                         </div>*/}
-                      </Link>
-                    </Link>
-                  </div>
+                      </div>
+                    </div>
+                  </Link>
                 ))}
               </div>
             )}
