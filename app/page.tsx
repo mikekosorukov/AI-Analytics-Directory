@@ -537,7 +537,7 @@ export default function Home() {
                 <Button
                   onClick={loadMore}
                   disabled={isPageLoading}
-                  className="bg-[#6366f1] hover:bg-[#5458e6] text-white"
+                  className="border-2 border-[#6366f1] text-[#6366f1] hover:bg-[#6366f1] hover:text-white transition-all duration-200"
                 >
                   {isPageLoading ? (
                     <span className="inline-flex items-center gap-2">
