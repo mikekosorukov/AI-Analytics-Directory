@@ -2,12 +2,12 @@ import { Metadata } from 'next'
 import { supabase } from '@/lib/supabaseClient'
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
   children: React.ReactNode
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params
+  const { slug } = await params
 
   // Fetch tool data
   const { data: tool, error } = await supabase
