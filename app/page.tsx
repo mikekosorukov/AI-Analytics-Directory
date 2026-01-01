@@ -4,22 +4,12 @@ import { useState, useEffect, useCallback, useLayoutEffect, useRef } from "react
 import { supabase } from "@/lib/supabaseClient";
 import { Bot, ExternalLink, Loader2, Check, ChevronLeft, ChevronRight, Funnel, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Link from "next/link";
 import Header from "@/components/ui/header";
-import HowTo from "@/components/ui/how-to";
-import About from "@/components/ui/about";
 import Image from 'next/image';
 import { useStore } from './store/store';
-import { TABS } from './types/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useRouter } from 'next/navigation';
 
 const PAGE_SIZE = 8;
 
@@ -47,7 +37,8 @@ interface TechnicalityLevel {
 }
 
 export default function Home() {
-  const { activeTab, setActiveTab, selectedCategory, selectedTechnicality, setSelectedCategory, setSelectedTechnicality, clearFilters, resetScrollTrigger, triggerScrollReset } = useStore()
+  const router = useRouter();
+  const { selectedCategory, selectedTechnicality, setSelectedCategory, setSelectedTechnicality, clearFilters, resetScrollTrigger, triggerScrollReset } = useStore()
 
   //data
   const [tools, setTools] = useState<Tool[]>([]);
@@ -62,28 +53,9 @@ export default function Home() {
 
   const hasMore = total === null ? false : tools?.length < total;
 
-  const howToRef = useRef<HTMLDivElement>(null);
-
   const containerRef = useRef<HTMLDivElement>(null);
 	const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-  
-  const scrollToCategorization = () => {
-		if (!howToRef.current) return;
-
-		const categorizationEl =
-			howToRef.current.querySelector<HTMLDivElement>('#categorization');
-		if (categorizationEl) {
-			const headerOffset = 100; // Account for sticky header (64px) + extra padding
-			const elementPosition = categorizationEl.getBoundingClientRect().top;
-			const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-			window.scrollTo({
-				top: offsetPosition,
-				behavior: 'smooth'
-			});
-		}
-	};
 
 	const updateScrollButtons = () => {
 		if (!containerRef.current) return;
@@ -101,23 +73,21 @@ export default function Home() {
 		return () => clearTimeout(timer);
 	}, [categories]);
 
-	// Reset scroll position when resetScrollTrigger changes or when returning to explore tab
+	// Reset scroll position when resetScrollTrigger changes
 	// Use useLayoutEffect to run synchronously before browser paint
 	useLayoutEffect(() => {
-		if (activeTab === 'explore') {
-			// Multiple attempts to ensure the reset happens even if DOM isn't ready immediately
-			const attemptReset = (attempts = 0) => {
-				if (containerRef.current) {
-					containerRef.current.scrollLeft = 0;
-					updateScrollButtons();
-				} else if (attempts < 5) {
-					// If container not ready, try again
-					setTimeout(() => attemptReset(attempts + 1), 10);
-				}
-			};
-			attemptReset();
-		}
-	}, [resetScrollTrigger, activeTab]);
+		// Multiple attempts to ensure the reset happens even if DOM isn't ready immediately
+		const attemptReset = (attempts = 0) => {
+			if (containerRef.current) {
+				containerRef.current.scrollLeft = 0;
+				updateScrollButtons();
+			} else if (attempts < 5) {
+				// If container not ready, try again
+				setTimeout(() => attemptReset(attempts + 1), 10);
+			}
+		};
+		attemptReset();
+	}, [resetScrollTrigger]);
 
 	useEffect(() => {
 		const container = containerRef.current;
@@ -148,7 +118,7 @@ export default function Home() {
 			window.removeEventListener('resize', updateScrollButtons);
 			clearTimeout(timer);
 		};
-	}, [categories, activeTab, resetScrollTrigger]);
+	}, [categories, resetScrollTrigger]);
 
 	const scrollLeftFunc = () => {
 		if (containerRef.current) {
@@ -278,55 +248,45 @@ export default function Home() {
       {/* Header */}
       <Header />
 
-      {/* Hero Section. Show only on main page */} 
-			{activeTab === 'explore' ? (
-				<section className='relative py-20 px-4 sm:px-6 lg:px-8'>
-					<div className='max-w-4xl mx-auto text-center'>
-						<h1 className='text-xl sm:text-2xl lg:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
-							Explore emerging{' '}
-							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
-								AI Analytics
-							</span> {' '}
-							landscape
-						</h1>
-						<h2 className='text-white text-xl sm:text-2xl lg:text-4xl mb-16 font-semibold'>
-							Find the{' '}
-							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
-								right tool
-							</span>{' '}
-							for the job
-						</h2>
-					</div>
+      {/* Hero Section */}
+			<section className='relative py-20 px-4 sm:px-6 lg:px-8'>
+				<div className='max-w-4xl mx-auto text-center'>
+					<h1 className='text-xl sm:text-2xl lg:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
+						Explore emerging{' '}
+						<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
+							AI Analytics
+						</span> {' '}
+						landscape
+					</h1>
+					<h2 className='text-white text-xl sm:text-2xl lg:text-4xl mb-16 font-semibold'>
+						Find the{' '}
+						<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
+							right tool
+						</span>{' '}
+						for the job
+					</h2>
+				</div>
 
-					{/* Badges */}
-					<div className='flex justify-center items-center gap-4 lg:gap-6 flex-wrap px-4'>
-						{[
-							'Founder-curated. No scrape.',
-							'70+ hand-selected tools',
-							'Bi-weekly updates',
-						].map((text) => (
-							<div className='flex items-center gap-2 lg:gap-3 px-2 lg:px-2.5 py-1.5 lg:py-2 border border-[#474858] rounded-[36px]' key={text}>
-								<div className='w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full shrink-0'>
-									<Check className='w-3 h-3 lg:w-4 lg:h-4 stroke-[4px]' />
-								</div>
-								<div className='text-[#BFC5D7] text-sm lg:text-[15px] whitespace-nowrap'>{text}</div>
+				{/* Badges */}
+				<div className='flex justify-center items-center gap-4 lg:gap-6 flex-wrap px-4'>
+					{[
+						'Founder-curated. No scrape.',
+						'70+ hand-selected tools',
+						'Bi-weekly updates',
+					].map((text) => (
+						<div className='flex items-center gap-2 lg:gap-3 px-2 lg:px-2.5 py-1.5 lg:py-2 border border-[#474858] rounded-[36px]' key={text}>
+							<div className='w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full shrink-0'>
+								<Check className='w-3 h-3 lg:w-4 lg:h-4 stroke-[4px]' />
 							</div>
-						))}
-					</div>
-				</section>
-			) : null}
+							<div className='text-[#BFC5D7] text-sm lg:text-[15px] whitespace-nowrap'>{text}</div>
+						</div>
+					))}
+				</div>
+			</section>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <Tabs value={activeTab} onValueChange={(tab) => {
-					if (tab === 'explore') {
-						clearFilters();
-						triggerScrollReset();
-					}
-					setActiveTab(tab as TABS);
-				}}>
-          {/* Explore Tab */}
-          <TabsContent value="explore" className="space-y-8">
+        <div className="space-y-8">
             {/* Filter Section */}
             <div className='relative bg-[#0f1116]/80 rounded-xl p-6 shadow-lg border border-white/10' key={`filter-${resetScrollTrigger}`}>
 							{/* Scrollable Container */}
@@ -366,11 +326,12 @@ export default function Home() {
                             : category_name === 'Text to SQL'
                             ? 'The simplest of the bunch, this was one of the first categories to emerge after ChatGPT came out. Often seen as demoware that\'s not suitable for production use.'
                             : (category_description ?? 'Empty description')}
-                          <div className='text-[#6366F1] shrink-0 underline underline-offset-[3px] cursor-pointer'
-                            onClick={() => {
-																setActiveTab('howto');
-																setTimeout(() => scrollToCategorization(), 50);
-															}}>Learn more about Categorization</div>
+                          <Link 
+                            href='/guide#categorization'
+                            className='text-[#6366F1] shrink-0 underline underline-offset-[3px] cursor-pointer block'
+                          >
+                            Learn more about Categorization
+                          </Link>
                         </div>
                       </TooltipContent>
                     </Tooltip>
@@ -550,18 +511,7 @@ export default function Home() {
                 </Button>
               </div>
             )}
-          </TabsContent>
-
-          {/* How To Tab */}
-          <TabsContent value="howto" className="space-y-8">
-            <HowTo ref={howToRef} />
-          </TabsContent>
-
-          {/* About Tab */}
-          <TabsContent value="about" className="space-y-8">
-            <About />
-          </TabsContent>
-        </Tabs>
+        </div>
       </main>
     </div>
   );
