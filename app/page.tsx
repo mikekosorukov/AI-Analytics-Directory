@@ -88,20 +88,6 @@ export default function Home() {
 	const updateScrollButtons = () => {
 		if (!containerRef.current) return;
 		const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
-		// #region agent log
-		fetch('http://127.0.0.1:7242/ingest/cac44433-b5f0-4ec1-abac-16cf730a795c', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'app/page.tsx:updateScrollButtons',
-				message: 'Scroll dimensions check',
-				data: { scrollLeft, scrollWidth, clientWidth, categoriesCount: categories.length },
-				timestamp: Date.now(),
-				sessionId: 'filter-arrows-debug',
-				hypothesisId: 'A,B,C'
-			})
-		}).catch(() => {});
-		// #endregion
 		// Add threshold and use Math.ceil for better subpixel handling
 		const threshold = 2;
 		setCanScrollLeft(scrollLeft > threshold);
@@ -109,20 +95,6 @@ export default function Home() {
 	};
 
 	useLayoutEffect(() => {
-		// #region agent log
-		fetch('http://127.0.0.1:7242/ingest/cac44433-b5f0-4ec1-abac-16cf730a795c', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'app/page.tsx:useLayoutEffect[categories]',
-				message: 'Categories changed, updating buttons',
-				data: { categoriesCount: categories.length },
-				timestamp: Date.now(),
-				sessionId: 'filter-arrows-debug',
-				hypothesisId: 'A'
-			})
-		}).catch(() => {});
-		// #endregion
 		updateScrollButtons();
 		// Fallback for delayed layout shifts
 		const timer = setTimeout(updateScrollButtons, 100);
@@ -150,21 +122,6 @@ export default function Home() {
 	useEffect(() => {
 		const container = containerRef.current;
 		if (!container) return;
-
-		// #region agent log
-		fetch('http://127.0.0.1:7242/ingest/cac44433-b5f0-4ec1-abac-16cf730a795c', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'app/page.tsx:useEffect[categories, activeTab] - listeners',
-				message: 'Adding event listeners and ResizeObserver',
-				data: { activeTab },
-				timestamp: Date.now(),
-				sessionId: 'filter-arrows-debug',
-				hypothesisId: 'C,I'
-			})
-		}).catch(() => {});
-		// #endregion
 
 		// Ensure scroll position is 0 when component mounts/remounts
 		container.scrollLeft = 0;
@@ -296,20 +253,6 @@ export default function Home() {
           if (bIndex !== -1) return 1;
           return 0;
         });
-		// #region agent log
-		fetch('http://127.0.0.1:7242/ingest/cac44433-b5f0-4ec1-abac-16cf730a795c', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'app/page.tsx:setCategories',
-				message: 'Setting categories',
-				data: { count: sortedCategories.length },
-				timestamp: Date.now(),
-				sessionId: 'filter-arrows-debug',
-				hypothesisId: 'A'
-			})
-		}).catch(() => {});
-		// #endregion
         setCategories(sortedCategories);
       }
 
@@ -361,20 +304,14 @@ export default function Home() {
 							'Founder-curated. No scrape.',
 							'70+ hand-selected tools',
 							'Bi-weekly updates',
-						].map((text) => {
-							// #region agent log
-							fetch('http://127.0.0.1:7242/ingest/cac44433-b5f0-4ec1-abac-16cf730a795c',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/page.tsx:258',message:'Badge render - checking if fragment wrapper causes key warning',data:{badgeText:text,hasFragmentWrapper:true},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
-							// #endregion
-							return (
-							<>
-								<div className='flex items-center gap-2 lg:gap-3 px-2 lg:px-2.5 py-1.5 lg:py-2 border border-[#474858] rounded-[36px]' key={text}>
-									<div className='w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full shrink-0'>
-										<Check className='w-3 h-3 lg:w-4 lg:h-4 stroke-[4px]' />
-									</div>
-									<div className='text-[#BFC5D7] text-sm lg:text-[15px] whitespace-nowrap'>{text}</div>
+						].map((text) => (
+							<div className='flex items-center gap-2 lg:gap-3 px-2 lg:px-2.5 py-1.5 lg:py-2 border border-[#474858] rounded-[36px]' key={text}>
+								<div className='w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center bg-[#C5F4C7] rounded-full shrink-0'>
+									<Check className='w-3 h-3 lg:w-4 lg:h-4 stroke-[4px]' />
 								</div>
-							</>
-						)})}
+								<div className='text-[#BFC5D7] text-sm lg:text-[15px] whitespace-nowrap'>{text}</div>
+							</div>
+						))}
 					</div>
 				</section>
 			) : null}
