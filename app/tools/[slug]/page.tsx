@@ -34,13 +34,13 @@ export default function Tools() {
 							</span> {' '}
 							landscape
 						</h1>
-						<h1 className='text-white text-xl md:text-4xl mb-16 font-semibold'>
+						<h2 className='text-white text-xl md:text-4xl mb-16 font-semibold'>
 							Find the{' '}
 							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
 								right tool
 							</span>{' '}
 							for the job
-						</h1>
+						</h2>
 					</div>
 
 					{/* Badges */}
