@@ -50,39 +50,39 @@ export default function SuggestToolForm({
 
 	return (
 		<div className='lg:max-w-md mx-auto bg-[#0f1116] border border-white/10 rounded-2xl shadow-2xl p-8'>
-			<h2 className='text-2xl font-bold text-white mb-6'>Suggest an AI Tool</h2>
+			<h2 className='font-bold text-lg text-white mb-4 drop-shadow-sm'>Suggest a new tool</h2>
 
 			<form onSubmit={handleSubmit} className='flex flex-col gap-6'>
-				<Input
-					placeholder='Tool name'
-					name='tool_name'
-					value={formData.tool_name}
-					onChange={handleChange}
-					className='bg-[#1c1f2a] text-white py-3'
-				/>
+			<Input
+				placeholder='Tool name'
+				name='tool_name'
+				value={formData.tool_name}
+				onChange={handleChange}
+				className='bg-[#1c1f2a] text-white py-3 border-[#474858] focus:outline-none focus:border-[#6366f1] focus-visible:ring-0 focus-visible:ring-offset-0'
+			/>
 
-				<textarea
-					placeholder='Description'
-					name='description'
-					value={formData.description}
-					onChange={handleChange}
-					className='bg-[#1c1f2a] text-white rounded-md p-3 resize-none min-h-[100px] focus:outline-none focus:ring-2 focus:ring-indigo-500'
-				/>
+			<textarea
+				placeholder='Why does it belong here?'
+				name='description'
+				value={formData.description}
+				onChange={handleChange}
+				className='bg-[#1c1f2a] text-white text-sm placeholder:text-muted-foreground rounded-md p-3 resize-none min-h-[100px] border border-[#474858] focus:outline-none focus:border-[#6366f1]'
+			/>
 
-				<Input
-					placeholder='Website link'
-					name='website_link'
-					value={formData.website_link}
-					onChange={handleChange}
-					className='bg-[#1c1f2a] text-white py-3'
-				/>
+			<Input
+				placeholder='Website link'
+				name='website_link'
+				value={formData.website_link}
+				onChange={handleChange}
+				className='bg-[#1c1f2a] text-white py-3 border-[#474858] focus:outline-none focus:border-[#6366f1] focus-visible:ring-0 focus-visible:ring-offset-0'
+			/>
 
-				<Button
-					type='submit'
-					className='bg-indigo-600 hover:bg-indigo-700 py-3 text-lg font-medium'
-				>
-					Submit
-				</Button>
+			<Button
+				type='submit'
+				className='bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none shadow-md text-sm font-medium'
+			>
+				Submit
+			</Button>
 			</form>
 		</div>
 	);

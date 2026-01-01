@@ -10,17 +10,19 @@ import Logo from "@/assets/logo.png";
 import { TABS } from '@/app/types/tabs';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
 
 export default function Header() {
   const pathname = usePathname()
   const router = useRouter();
-  const { activeTab, setActiveTab } = useStore()
+  const { activeTab, setActiveTab, clearFilters, triggerScrollReset } = useStore()
   const [showSuggest, setShowSuggest] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const suggestRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const TAB_CLASSNAMES =
-		'text-base text-white transition-colors duration-200 font-medium hover:text-[#6366F1] data-[state=active]:bg-transparent data-[state=active]:text-[#6366F1] data-[state=active]:font-bold';
+		'text-base text-white transition-colors duration-200 font-medium hover:text-[#6366F1] data-[state=active]:bg-transparent data-[state=active]:text-[#6366F1] data-[state=active]:underline data-[state=active]:decoration-[#6366F1]';
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -46,9 +48,17 @@ export default function Header() {
   }, [showSuggest]);
 
   const handleExploreClick = () => {
+    clearFilters();
+    triggerScrollReset();
     if (pathname !== "/") {
       router.push('/');
     }
+  }
+
+  const handleHomeClick = () => {
+    clearFilters();
+    triggerScrollReset();
+    setActiveTab('explore');
   }
 
   return (
@@ -56,14 +66,20 @@ export default function Header() {
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
 				<div className='flex justify-between items-center h-16'>
 					{/* Logo */}
-					<Link href={'/'} className='flex items-center space-x-2' onClick={() => setActiveTab('explore')}>
-						<Image src={Logo} width='40' alt='logo' />
-						<span className='text-white drop-shadow-lg'>AI Analytics Hub</span>
+					<Link href={'/'} className='flex items-center space-x-2' onClick={handleHomeClick}>
+						<Image src={Logo} width='40' alt='logo' className='shrink-0' />
+						<span className='text-white drop-shadow-lg whitespace-nowrap text-sm sm:text-base'>AI Analytics Hub</span>
 					</Link>
 
-          <Tabs value={activeTab} onValueChange={(tab) => setActiveTab(tab as TABS)}>
+					{/* Desktop Navigation - Tabs */}
+					<Tabs value={activeTab} onValueChange={(tab) => {
+						if (tab === 'explore') {
+							triggerScrollReset();
+						}
+						setActiveTab(tab as TABS);
+					}} className='hidden lg:block'>
 						<TabsList className='bg-transparent'>
-              <TabsTrigger
+							<TabsTrigger
 								value='explore'
 								className={TAB_CLASSNAMES}
 								onClick={handleExploreClick}
@@ -79,6 +95,24 @@ export default function Header() {
 						</TabsList>
 					</Tabs>
 
+					{/* Desktop - Suggest Tool Button */}
+					<Button
+						ref={buttonRef}
+						onClick={() => setShowSuggest((prev) => !prev)}
+						className='hidden lg:block bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none shadow-md'
+					>
+						Suggest tool
+					</Button>
+
+					{/* Mobile Hamburger Menu */}
+					<button
+						className='lg:hidden text-white p-2'
+						onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+						aria-label='Toggle menu'
+					>
+						{mobileMenuOpen ? <X className='w-6 h-6' /> : <Menu className='w-6 h-6' />}
+					</button>
+
 					{/* Suggest Tool Modal */}
 					{showSuggest && (
 						<div
@@ -88,16 +122,59 @@ export default function Header() {
 							<SuggestedTools setShowSuggest={setShowSuggest} />
 						</div>
 					)}
-
-					{/* Suggest Tool Button */}
-					<Button
-						ref={buttonRef}
-						onClick={() => setShowSuggest((prev) => !prev)}
-						className='bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none shadow-md'
-					>
-						Suggest tool
-					</Button>
 				</div>
+
+				{/* Mobile Menu Dropdown */}
+				{mobileMenuOpen && (
+					<div className='lg:hidden border-t border-white/10 py-4 space-y-4'>
+						<button
+							onClick={() => {
+								clearFilters();
+								triggerScrollReset();
+								setActiveTab('explore');
+								setMobileMenuOpen(false);
+							}}
+							className={`block w-full text-left px-4 py-2 text-base font-medium transition-colors ${
+								activeTab === 'explore' ? 'text-[#6366F1]' : 'text-white hover:text-[#6366F1]'
+							}`}
+						>
+							Tool list
+						</button>
+						<button
+							onClick={() => {
+								setActiveTab('howto');
+								setMobileMenuOpen(false);
+							}}
+							className={`block w-full text-left px-4 py-2 text-base font-medium transition-colors ${
+								activeTab === 'howto' ? 'text-[#6366F1]' : 'text-white hover:text-[#6366F1]'
+							}`}
+						>
+							How To Use
+						</button>
+						<button
+							onClick={() => {
+								setActiveTab('about');
+								setMobileMenuOpen(false);
+							}}
+							className={`block w-full text-left px-4 py-2 text-base font-medium transition-colors ${
+								activeTab === 'about' ? 'text-[#6366F1]' : 'text-white hover:text-[#6366F1]'
+							}`}
+						>
+							About
+						</button>
+						<div className='px-4'>
+							<Button
+								onClick={() => {
+									setShowSuggest((prev) => !prev);
+									setMobileMenuOpen(false);
+								}}
+								className='w-full bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none shadow-md'
+							>
+								Suggest tool
+							</Button>
+						</div>
+					</div>
+				)}
 			</div>
 		</header>
 	);

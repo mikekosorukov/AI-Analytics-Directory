@@ -145,20 +145,69 @@ export default function ToolDetails() {
   const regexParse = (val: any): string[] => {
     try {
       if (!val) return [];
-      return Array.isArray(val) ? val : JSON.parse(val);
-    } catch {
-      let cleaned = val.replace(/\r?\n/g, ",").replace(/"\s*"/g, '","');
-
-      const regex = /"([^"]+)"|([^,]+)/g;
-      const result: string[] = [];
-      let match;
-
-      while ((match = regex.exec(cleaned)) !== null) {
-        const text = match[1] || match[2];
-        if (text) result.push(text.trim());
+      
+      // If already an array, return it
+      if (Array.isArray(val)) return val;
+      
+      // If it's a string, try to parse it
+      if (typeof val === 'string') {
+        // Try standard JSON parse first
+        try {
+          return JSON.parse(val);
+        } catch {
+          // If JSON parse fails, it might be PostgreSQL array format
+          // Remove outer brackets and split by comma, but preserve quoted strings
+          const cleaned = val.trim();
+          if (cleaned.startsWith('[') && cleaned.endsWith(']')) {
+            const inner = cleaned.slice(1, -1);
+            const items: string[] = [];
+            let current = '';
+            let inQuotes = false;
+            let escapeNext = false;
+            
+            for (let i = 0; i < inner.length; i++) {
+              const char = inner[i];
+              
+              if (escapeNext) {
+                current += char;
+                escapeNext = false;
+                continue;
+              }
+              
+              if (char === '\\') {
+                escapeNext = true;
+                continue;
+              }
+              
+              if (char === '"') {
+                inQuotes = !inQuotes;
+                continue;
+              }
+              
+              if (char === ',' && !inQuotes) {
+                if (current.trim()) {
+                  items.push(current.trim());
+                }
+                current = '';
+                continue;
+              }
+              
+              current += char;
+            }
+            
+            if (current.trim()) {
+              items.push(current.trim());
+            }
+            
+            return items;
+          }
+        }
       }
-
-      return result.filter(Boolean);
+      
+      return [String(val)];
+    } catch (e) {
+      console.error('Error parsing value:', val, e);
+      return [];
     }
   };
 
@@ -215,7 +264,7 @@ export default function ToolDetails() {
   const whoFor = safeParse(toolData.personas);
   const mainCapabilities = safeParse(toolData.capabilities);
   const uniqueFeatures = regexParse(toolData.unique_features);
-  const vsStatusQuo = safeParse(toolData.vs_status_quo);
+  const vsStatusQuo = regexParse(toolData.vs_status_quo);
 
   return (
     <div className="space-y-6 bg-[#f5f5f5] p-6 rounded-xl">
@@ -254,7 +303,7 @@ export default function ToolDetails() {
         {/* What it is for */}
         <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-2">What it is for?</h3>
+            <h3 className="font-semibold mb-2">What it is for</h3>
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {whatFor.map((item: string, i: number) => (
@@ -269,7 +318,7 @@ export default function ToolDetails() {
         {/* Who it is for */}
         <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-2">Who it is for?</h3>
+            <h3 className="font-semibold mb-2">Who it is for</h3>
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {whoFor.map((item: string, i: number) => (
@@ -284,7 +333,7 @@ export default function ToolDetails() {
         {/* Vs status quo */}
         <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-2">Vs status quo alternatives</h3>
+            <h3 className="font-semibold mb-2">Benefits vs Status Quo</h3>
             <hr />
             <div className="space-y-3 mt-3">
               {vsStatusQuo.length > 0 ? (
@@ -316,7 +365,7 @@ export default function ToolDetails() {
         <div className="flex flex-col lg:flex-row gap-6 w-full">
           <Card className="lg:w-[66%] bg-white">
             <CardContent className="p-4">
-              <h3 className="font-semibold mb-2">Idea behind</h3>
+              <h3 className="font-semibold mb-2">Summary</h3>
               <hr />
               <p className="text-sm text-gray-700 mt-3 leading-relaxed bg-slate-200 p-2 rounded-lg">
                 {toolData.long_description}
@@ -326,7 +375,7 @@ export default function ToolDetails() {
 
           <Card className="flex-1 lg:w-[30%] bg-white">
             <CardContent className="p-4">
-              <h3 className="font-semibold mb-2">Direct competitors</h3>
+              <h3 className="font-semibold mb-2">Closest competitors</h3>
               <hr />
               <ul className="space-y-3 text-sm text-gray-700 mt-3">
                 {competitorsData.length > 0 ? (
@@ -379,7 +428,7 @@ export default function ToolDetails() {
         {/* Main capabilities */}
         <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-2">Main capabilities</h3>
+            <h3 className="font-semibold mb-2">Core capabilities and features</h3>
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-4">
               {mainCapabilities.map((cap: string, i: number) => (
@@ -394,7 +443,7 @@ export default function ToolDetails() {
         {/* Unique features */}
         <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-2">Unique features</h3>
+            <h3 className="font-semibold mb-2">Focus</h3>
             <hr />
             <ul className="space-y-2 text-sm text-gray-700 mt-3">
               {uniqueFeatures.map((feat: string, i: number) => (
@@ -409,7 +458,7 @@ export default function ToolDetails() {
         {/* Communities */}
         <Card className="flex-1 min-w-[300px] bg-white">
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-2">Communities</h3>
+            <h3 className="font-semibold mb-2">Active Communities</h3>
             <hr />
             <ul className="space-y-3 text-sm text-gray-700 mt-3">
               {toolData?.communities_urls?.map((c: Community, i: number) => (

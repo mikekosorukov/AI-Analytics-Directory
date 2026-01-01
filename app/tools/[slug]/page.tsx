@@ -30,7 +30,7 @@ export default function Tools() {
 						<h1 className='text-2xl md:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
 							Explore emerging{' '}
 							<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>
-								AI analytics
+								AI Analytics
 							</span> {' '}
 							landscape
 						</h1>
