@@ -14,7 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
 export const metadata: Metadata = {
 	title: 'Founder-curated AI data analytics hub',
 	description:
-		'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
+		'Explore emerging AI tools and apps for data analysis, selected and moderated by a founder. No scrape, complete database of tools, updated bi-weekly.',
 	authors: [{ name: 'AI Analytics Hub' }],
 	keywords: [
 		'AI tools',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 	},
 	openGraph: {
 		title: 'Founder-curated AI data analytics hub',
-		description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
+		description: 'Explore emerging AI tools and apps for data analysis, selected and moderated by a founder. No scrape, complete database of tools, updated bi-weekly.',
 		url: baseUrl,
 		siteName: 'AI Analytics Tools',
 		type: 'website',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 	twitter: {
 		card: 'summary_large_image',
 		title: 'Founder-curated AI data analytics hub',
-		description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
+		description: 'Explore emerging AI tools and apps for data analysis, selected and moderated by a founder. No scrape, complete database of tools, updated bi-weekly.',
 	},
 };
 
