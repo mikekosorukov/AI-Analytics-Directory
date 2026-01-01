@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   console.log("Tools fetched for sitemap:", tools?.length || 0);
 
   // Use environment variable or fallback to default
-  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://yourdomain.com").replace(/\/$/, "");
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://aidataanalytics.io").replace(/\/$/, "");
 
   const dynamicUrls =
     tools?.map((tool) => ({
