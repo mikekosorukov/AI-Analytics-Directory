@@ -34,6 +34,13 @@ export const metadata: Metadata = {
 	alternates: {
 		canonical: baseUrl,
 	},
+	icons: {
+		icon: [
+			{ url: '/images/favicon.ico' },
+			{ url: '/images/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+		],
+		shortcut: '/images/favicon.ico',
+	},
 	openGraph: {
 		title: 'Founder-curated AI data analytics hub',
 		description: 'Explore emerging AI tools and apps for data analysis, selected and moderated by a founder. No scrape, complete database of tools, updated bi-weekly.',
