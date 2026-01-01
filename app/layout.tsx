@@ -12,7 +12,7 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
 		: 'https://aidataanalytics.io')
 
 export const metadata: Metadata = {
-	title: 'AI Analytics Tools - Find the Right Tool for the Job',
+	title: 'Founder-curated AI data analytics hub',
 	description:
 		'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
 	authors: [{ name: 'AI Analytics Hub' }],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 		canonical: baseUrl,
 	},
 	openGraph: {
-		title: 'AI Analytics Tools - Find the Right Tool for the Job',
+		title: 'Founder-curated AI data analytics hub',
 		description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
 		url: baseUrl,
 		siteName: 'AI Analytics Tools',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: 'summary_large_image',
-		title: 'AI Analytics Tools - Find the Right Tool for the Job',
+		title: 'Founder-curated AI data analytics hub',
 		description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
 	},
 };
