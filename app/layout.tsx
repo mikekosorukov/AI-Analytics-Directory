@@ -6,6 +6,11 @@ import PostHogProvider from './posthog-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+	(process.env.NODE_ENV === 'development' 
+		? 'http://localhost:3000' 
+		: 'https://aidataanalytics.io')
+
 export const metadata: Metadata = {
 	title: 'AI Analytics Tools - Find the Right Tool for the Job',
 	description:
@@ -26,6 +31,21 @@ export const metadata: Metadata = {
 		'AI analytics platform',
 	],
 	robots: 'index, follow',
+	alternates: {
+		canonical: baseUrl,
+	},
+	openGraph: {
+		title: 'AI Analytics Tools - Find the Right Tool for the Job',
+		description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
+		url: baseUrl,
+		siteName: 'AI Analytics Tools',
+		type: 'website',
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'AI Analytics Tools - Find the Right Tool for the Job',
+		description: 'Explore the emerging AI analytics landscape and discover the perfect tools for your data analysis needs.',
+	},
 };
 
 export default function RootLayout({
