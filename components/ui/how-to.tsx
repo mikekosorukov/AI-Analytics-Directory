@@ -77,13 +77,13 @@ const HowTo = forwardRef<HTMLDivElement>((_, ref) => (
 
 			<Separator className='my-8' />
 
-			<section id='categorization'>
-				<div className='mb-8'>
-					<h2 className='text-2xl lg:text-3xl font-bold mb-3 text-gray-900'>
-						Categorization
-					</h2>
-					<div className='w-20 h-1 bg-[#E67F44] rounded-full' />
-				</div>
+		<section id='categorization' className='scroll-mt-24'>
+			<div className='mb-8'>
+				<h2 className='text-2xl lg:text-3xl font-bold mb-3 text-gray-900'>
+					Categorization
+				</h2>
+				<div className='w-20 h-1 bg-[#E67F44] rounded-full' />
+			</div>
 				<p className='text-gray-700 leading-relaxed mb-6'>
 					To make this directory useful and easy to navigate, it is essential to
 					categorize the tools. Although categorization is somewhat arbitrary as
