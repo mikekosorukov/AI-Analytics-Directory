@@ -12,6 +12,7 @@ import XIcon from '@/assets/communities/x.svg';
 import SlackIcon from '@/assets/communities/slack.svg';
 import GitHubIcon from '@/assets/communities/github.svg';
 import ProductHuntIcon from '@/assets/communities/producthunt.svg';
+import SubstackIcon from '@/assets/communities/substack.svg';
 
 interface Community {
   url: string;
@@ -48,6 +49,7 @@ const COMMUNITY_ICONS: Record<string, StaticImageData> = {
 	Slack: SlackIcon,
 	GitHub: GitHubIcon,
 	ProductHunt: ProductHuntIcon,
+	Substack: SubstackIcon,
 };
 
 export default function ToolDetails() {
