@@ -251,6 +251,9 @@ export default function Home() {
       {/* Hero Section */}
 			<section className='relative py-20 px-4 sm:px-6 lg:px-8'>
 				<div className='max-w-4xl mx-auto text-center'>
+					<a href="https://www.producthunt.com/products/ai-analytics-hub/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-ai&#0045;analytics&#0045;hub" target="_blank" className="inline-block mb-6">
+						<img src="https://api.producthunt.com/widgets/embed-image/v1/product_review.svg?product_id=1146258&theme=dark" alt="AI Analytics Hub - Founder-built directory of AI analytics tools | Product Hunt" style={{ width: '250px', height: '54px' }} width={250} height={54} />
+					</a>
 					<h1 className='text-xl sm:text-2xl lg:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
 						Explore emerging{' '}
 						<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>

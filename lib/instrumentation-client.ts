@@ -1,4 +1,5 @@
 "use client";
+// @ts-ignore - posthog-js might not have type declarations
 import posthog from "posthog-js";
 
 let initialized = false;
