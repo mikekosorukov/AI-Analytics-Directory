@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useLayoutEffect, useRef } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { Bot, ExternalLink, Loader2, Check, ChevronLeft, ChevronRight, Funnel, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -138,23 +137,25 @@ export default function Home() {
 		}
 	};
 
-  const buildQuery = useCallback(() => {
-    let query = supabase
-      .from("tools_updated")
-      .select(
-        "tool_id, tool_name, category, technicality_level, short_description, url, rls, logo_path, slug",
-        { count: "exact" }
-      )
-      .eq("rls", true)
-      .order("tool_name", { ascending: true });
-
+  // Fetch tools via API route
+  const fetchTools = useCallback(async (from: number, to: number) => {
+    const params = new URLSearchParams({
+      from: from.toString(),
+      to: to.toString(),
+    });
+    
     if (selectedCategory !== "all") {
-      query = query.contains("category", [selectedCategory]);
+      params.set("category", selectedCategory);
     }
     if (selectedTechnicality !== "all") {
-      query = query.eq("technicality_level", selectedTechnicality);
+      params.set("technicality", selectedTechnicality);
     }
-    return query;
+
+    const response = await fetch(`/api/tools?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch tools");
+    }
+    return response.json();
   }, [selectedCategory, selectedTechnicality]);
 
   const loadFirstPage = useCallback(async () => {
@@ -165,18 +166,16 @@ export default function Home() {
     const from = 0;
     const to = PAGE_SIZE - 1;
 
-    const { data, error, count } = await buildQuery().range(from, to);
-
-    if (error) {
+    try {
+      const { data, count } = await fetchTools(from, to);
+      setTools(data || []);
+      setTotal(count ?? 0);
+    } catch (error) {
       console.error("Error fetching first page:", error);
+    } finally {
       setIsInitialLoading(false);
-      return;
     }
-
-    setTools(data || []);
-    setTotal(count ?? 0);
-    setIsInitialLoading(false);
-  }, [buildQuery]);
+  }, [fetchTools]);
 
   const loadMore = async () => {
     if (isPageLoading) return;
@@ -185,56 +184,58 @@ export default function Home() {
     const from = tools?.length;
     const to = tools?.length + PAGE_SIZE - 1;
 
-    const { data, error } = await buildQuery().range(from, to);
-    
-    if (error) {
+    try {
+      const { data } = await fetchTools(from, to);
+      setTools((prev) => [...prev, ...(data || [])]);
+    } catch (error) {
       console.error("Error fetching next page:", error);
+    } finally {
       setIsPageLoading(false);
-      return;
     }
-
-    setTools((prev) => [...prev, ...(data || [])]);
-    setIsPageLoading(false);
   }
 
     useEffect(() => {
     (async () => {
-      const { data: categoriesData, error: categoriesError } = await supabase
-				.from('categories')
-				.select('category_id, category_name, category_description');
-      if (categoriesError) {
-        console.error("Error fetching categories:", categoriesError);
-      } else {
-        // Filter out specific categories
-        const excludedCategories = ['SaaS Tool Aggregator', 'Data Quality Platform', 'Database Native', 'Embedded Analytics'];
-        const filteredCategories = categoriesData.filter(
-          (cat: Category) => !excludedCategories.includes(cat.category_name)
-        );
-        // Sort to put "AI Analyst" first, "Semantic layer" second, and "AI Spreadsheets" third
-        const sortedCategories = filteredCategories.sort((a: Category, b: Category) => {
-          const order = ['AI Analyst', 'Semantic layer', 'AI Spreadsheets'];
-          const aIndex = order.indexOf(a.category_name);
-          const bIndex = order.indexOf(b.category_name);
-          
-          if (aIndex !== -1 && bIndex !== -1) {
-            return aIndex - bIndex;
-          }
-          if (aIndex !== -1) return -1;
-          if (bIndex !== -1) return 1;
-          return 0;
-        });
-        setCategories(sortedCategories);
+      // Fetch categories via API
+      try {
+        const categoriesResponse = await fetch('/api/categories');
+        if (categoriesResponse.ok) {
+          const { data: categoriesData } = await categoriesResponse.json();
+          // Filter out specific categories
+          const excludedCategories = ['SaaS Tool Aggregator', 'Data Quality Platform', 'Database Native', 'Embedded Analytics'];
+          const filteredCategories = categoriesData.filter(
+            (cat: Category) => !excludedCategories.includes(cat.category_name)
+          );
+          // Sort to put "AI Analyst" first, "Semantic layer" second, and "AI Spreadsheets" third
+          const sortedCategories = filteredCategories.sort((a: Category, b: Category) => {
+            const order = ['AI Analyst', 'Semantic layer', 'AI Spreadsheets'];
+            const aIndex = order.indexOf(a.category_name);
+            const bIndex = order.indexOf(b.category_name);
+            
+            if (aIndex !== -1 && bIndex !== -1) {
+              return aIndex - bIndex;
+            }
+            if (aIndex !== -1) return -1;
+            if (bIndex !== -1) return 1;
+            return 0;
+          });
+          setCategories(sortedCategories);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
       }
 
-      const { data: technicalityData, error: technicalityError } = await supabase
-        .from("technicality_level")
-        .select("technicality_level");
-      if (technicalityError) {
-        console.error("Error fetching technicality levels:", technicalityError);
-      } else {
-        setTechnicalityLevels(
-          (technicalityData || []).map((t: TechnicalityLevel) => t.technicality_level)
-        );
+      // Fetch technicality levels via API
+      try {
+        const technicalityResponse = await fetch('/api/technicality-levels');
+        if (technicalityResponse.ok) {
+          const { data: technicalityData } = await technicalityResponse.json();
+          setTechnicalityLevels(
+            (technicalityData || []).map((t: TechnicalityLevel) => t.technicality_level)
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching technicality levels:", error);
       }
     })();
   }, []);
@@ -251,9 +252,6 @@ export default function Home() {
       {/* Hero Section */}
 			<section className='relative py-20 px-4 sm:px-6 lg:px-8'>
 				<div className='max-w-4xl mx-auto text-center'>
-					<a href="https://www.producthunt.com/products/ai-analytics-hub/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-ai&#0045;analytics&#0045;hub" target="_blank" className="inline-block mb-6">
-						<img src="https://api.producthunt.com/widgets/embed-image/v1/product_review.svg?product_id=1146258&theme=dark" alt="AI Analytics Hub - Founder-built directory of AI analytics tools | Product Hunt" style={{ width: '250px', height: '54px' }} width={250} height={54} />
-					</a>
 					<h1 className='text-xl sm:text-2xl lg:text-4xl font-semibold mb-4 leading-[1.5] text-white drop-shadow-2xl'>
 						Explore emerging{' '}
 						<span className='bg-[#E67F44] py-1 px-2 text-shadow-xl'>

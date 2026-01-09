@@ -6,7 +6,6 @@ import { Bot, ExternalLink } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 
 import XIcon from '@/assets/communities/x.svg';
 import SlackIcon from '@/assets/communities/slack.svg';
@@ -60,76 +59,6 @@ export default function ToolDetails() {
   const [competitorsData, setCompetitorsData] = useState<Competitor[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch tool details, communities, and competitors
-  useEffect(() => {
-    if (!slug) return;
-
-    const fetchToolAndCommunities = async () => {
-      setLoading(true);
-
-      // Fetch tool data
-      const { data: tool, error: toolError } = await supabase
-        .from("tools_updated")
-        .select("*")
-        .eq("slug", slug)
-        .eq("rls", true)
-        .single();
-
-      if (toolError) {
-        console.error("Error fetching tool:", toolError.message);
-        setLoading(false);
-        return;
-      }
-
-      setToolData(tool);
-
-      // Parse communities IDs
-      //const communityIds = safeParse(tool.communities);
-      //if (communityIds.length > 0) {
-      //  // Fetch communities from communities table
-      //  const { data: communityData, error: communityError } = await supabase
-      //    .from("communities")
-      //    .select("id, name, url")
-      //    .in("id", communityIds);
-
-      //  if (communityError) {
-      //    console.error("Error fetching communities:", communityError.message);
-      //  } else {
-      //    setCommunities(communityData || []);
-      //  }
-      //}
-
-      // Parse competitors IDs and fetch from competitors table
-      const competitorIds = safeParse(tool.competitors);
-      if (competitorIds.length > 0) {
-        // Fetch competitors from tools_updated table
-        const { data: competitorData, error: competitorError } = await supabase
-          .from("tools_updated")
-          .select("tool_id, tool_name, url, logo_path")
-          .in("tool_id", competitorIds);
-
-        if (competitorError) {
-          console.error("Error fetching competitors:", competitorError.message);
-        } else {
-          // Transform competitor data to match the expected type
-          const formattedCompetitors: Competitor[] = (competitorData || []).map(
-            (competitor: any) => ({
-              id: competitor.tool_id,
-              name: competitor.tool_name,
-              url: competitor.url,
-              logo_path: competitor.logo_path,
-            })
-          );
-          setCompetitorsData(formattedCompetitors);
-        }
-      }
-
-      setLoading(false);
-    };
-
-    fetchToolAndCommunities();
-  }, [slug]);
-
   // Safe parse function for arrays
   const safeParse = (val: any): string[] => {
     try {
@@ -143,6 +72,63 @@ export default function ToolDetails() {
         .filter(Boolean);
     }
   };
+
+  // Fetch tool details, communities, and competitors
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchToolAndCommunities = async () => {
+      setLoading(true);
+
+      try {
+        // Fetch tool data via API
+        const toolResponse = await fetch(`/api/tools/${slug}`);
+        if (!toolResponse.ok) {
+          console.error("Error fetching tool");
+          setLoading(false);
+          return;
+        }
+
+        const { data: tool } = await toolResponse.json();
+        if (!tool) {
+          setLoading(false);
+          return;
+        }
+
+        setToolData(tool);
+
+        // Parse competitors IDs and fetch from API
+        const competitorIds = safeParse(tool.competitors);
+        if (competitorIds.length > 0) {
+          try {
+            const competitorResponse = await fetch(`/api/competitors?ids=${competitorIds.join(',')}`);
+            if (competitorResponse.ok) {
+              const { data: competitorData } = await competitorResponse.json();
+              // Transform competitor data to match the expected type
+              const formattedCompetitors: Competitor[] = (competitorData || []).map(
+                (competitor: any) => ({
+                  id: competitor.tool_id,
+                  name: competitor.tool_name,
+                  url: competitor.url,
+                  logo_path: competitor.logo_path,
+                })
+              );
+              setCompetitorsData(formattedCompetitors);
+            }
+          } catch (error) {
+            console.error("Error fetching competitors:", error);
+          }
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching tool:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchToolAndCommunities();
+  }, [slug]);
 
   const regexParse = (val: any): string[] => {
     try {

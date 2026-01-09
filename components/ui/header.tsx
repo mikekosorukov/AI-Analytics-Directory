@@ -90,6 +90,14 @@ export default function Header() {
 						>
 							About
 						</Link>
+						<Link
+							href='/blog'
+							className={`${LINK_CLASSNAMES} ${
+								pathname.startsWith('/blog') ? 'text-[#6366F1] underline decoration-[#6366F1] underline-offset-4' : 'text-white hover:text-[#6366F1]'
+							}`}
+						>
+							Blog
+						</Link>
 					</nav>
 
 					{/* Desktop - Suggest Tool Button */}
@@ -157,6 +165,17 @@ export default function Header() {
 							}`}
 						>
 							About
+						</Link>
+						<Link
+							href='/blog'
+							onClick={() => {
+								setMobileMenuOpen(false);
+							}}
+							className={`block w-full text-left px-4 py-2 text-base font-medium transition-colors ${
+								pathname.startsWith('/blog') ? '!text-[#6366F1]' : 'text-white hover:text-[#6366F1]'
+							}`}
+						>
+							Blog
 						</Link>
 						<div className='px-4'>
 							<Button

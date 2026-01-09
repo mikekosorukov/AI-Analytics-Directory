@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { supabase } from '@/lib/supabaseClient'
+import { supabaseServer } from '@/lib/supabaseServer'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -9,8 +9,8 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
 
-  // Fetch tool data
-  const { data: tool, error } = await supabase
+  // Fetch tool data using server-side client
+  const { data: tool, error } = await supabaseServer
     .from('tools_updated')
     .select('tool_name, long_description, url')
     .eq('slug', slug)
@@ -56,4 +56,3 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default function ToolLayout({ children }: Props) {
   return <>{children}</>
 }
-

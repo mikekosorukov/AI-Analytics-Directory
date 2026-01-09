@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { supabase } from "@/lib/supabaseClient";
+import { supabaseServer } from "@/lib/supabaseServer";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch your tool URLs (only published tools with rls: true)
-  const { data: tools, error } = await supabase
+  const { data: tools, error } = await supabaseServer
     .from("tools_updated")
     .select("slug")
     .eq("rls", true);
@@ -47,4 +47,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dynamicUrls,
   ];
 }
-

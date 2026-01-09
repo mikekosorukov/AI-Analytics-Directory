@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { supabase } from '@/lib/supabaseClient';
-
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
@@ -18,6 +16,7 @@ export default function SuggestToolForm({
 		description: '',
 		website_link: '',
 	});
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -31,17 +30,43 @@ export default function SuggestToolForm({
 		if (!formData.tool_name || !formData.description || !formData.website_link)
 			return;
 
-		const res = await supabase.from('Tool_suggestions').insert(formData);
+		setIsSubmitting(true);
 
-		if (res?.status === 201) {
-			setShowSuggest(false);
+		try {
+			const response = await fetch('/api/suggestions', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			});
 
-			setTimeout(() => {
+			if (response.status === 201) {
+				setShowSuggest(false);
+
+				setTimeout(() => {
+					toast({
+						title: '✅ Tool submitted',
+						description: 'Your suggestion has been added successfully!',
+					});
+				}, 500);
+			} else {
+				const data = await response.json();
 				toast({
-					title: '✅ Tool submitted',
-					description: 'Your suggestion has been added successfully!',
+					title: '❌ Error',
+					description: data.error || 'Failed to submit suggestion',
+					variant: 'destructive',
 				});
-			}, 500);
+			}
+		} catch (error) {
+			console.error('Error submitting suggestion:', error);
+			toast({
+				title: '❌ Error',
+				description: 'Failed to submit suggestion',
+				variant: 'destructive',
+			});
+		} finally {
+			setIsSubmitting(false);
 		}
 
 		// reset
@@ -79,9 +104,10 @@ export default function SuggestToolForm({
 
 			<Button
 				type='submit'
+				disabled={isSubmitting}
 				className='bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none shadow-md text-sm font-medium'
 			>
-				Submit
+				{isSubmitting ? 'Submitting...' : 'Submit'}
 			</Button>
 			</form>
 		</div>
