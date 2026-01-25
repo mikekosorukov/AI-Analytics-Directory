@@ -94,7 +94,7 @@ const portableTextComponents: PortableTextComponents = {
       const text = value.children?.[0]?.text || ''
       const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
       return (
-        <h2 id={id} className="text-2xl sm:text-3xl font-bold text-white mt-12 mb-4 scroll-mt-24">
+        <h2 id={id} className="text-2xl sm:text-3xl font-bold text-[#BFC4D5] mt-12 mb-4 scroll-mt-24">
           {children}
         </h2>
       )
@@ -103,33 +103,33 @@ const portableTextComponents: PortableTextComponents = {
       const text = value.children?.[0]?.text || ''
       const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
       return (
-        <h3 id={id} className="text-xl sm:text-2xl font-semibold text-white mt-8 mb-3 scroll-mt-24">
+        <h3 id={id} className="text-xl sm:text-2xl font-semibold text-[#BFC4D5] mt-8 mb-3 scroll-mt-24">
           {children}
         </h3>
       )
     },
     h4: ({ children }) => (
-      <h4 className="text-lg sm:text-xl font-semibold text-white mt-6 mb-2">
+      <h4 className="text-lg sm:text-xl font-semibold text-[#BFC4D5] mt-6 mb-2">
         {children}
       </h4>
     ),
     normal: ({ children }) => (
-      <p className="text-[#BFC5D7] leading-relaxed mb-4">{children}</p>
+      <p className="text-[#6F7791] leading-relaxed mb-4">{children}</p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-[#6366F1] pl-6 py-2 my-6 italic text-[#A7ABCB] bg-[#111827]/50 rounded-r-lg">
+      <blockquote className="border-l-4 border-[#6366F1] pl-6 py-2 my-6 italic text-[#6F7791] bg-[#111827]/50 rounded-r-lg">
         {children}
       </blockquote>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-inside space-y-2 mb-4 text-[#BFC5D7] ml-4">
+      <ul className="list-disc list-inside space-y-2 mb-4 text-[#6F7791] ml-4">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 mb-4 text-[#BFC5D7] ml-4">
+      <ol className="list-decimal list-inside space-y-2 mb-4 text-[#6F7791] ml-4">
         {children}
       </ol>
     ),
@@ -139,7 +139,7 @@ const portableTextComponents: PortableTextComponents = {
     number: ({ children }) => <li className="leading-relaxed">{children}</li>,
   },
   marks: {
-    strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+    strong: ({ children }) => <strong className="font-bold text-[#BFC4D5]">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,
     code: ({ children }) => (
       <code className="bg-[#1a1f2e] text-[#E67F44] px-1.5 py-0.5 rounded text-sm font-mono">
@@ -151,7 +151,7 @@ const portableTextComponents: PortableTextComponents = {
         href={value?.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[#6366F1] hover:text-[#818cf8] underline underline-offset-2 transition-colors"
+        className="text-[#6366F1] hover:text-[#818cf8] underline underline-offset-2 transition-colors [&_strong]:text-[#6366F1] hover:[&_strong]:text-[#818cf8]"
       >
         {children}
       </a>
@@ -171,7 +171,7 @@ const portableTextComponents: PortableTextComponents = {
             />
           </div>
           {value.caption && (
-            <figcaption className="text-center text-sm text-[#777D8F] mt-3">
+            <figcaption className="text-center text-sm text-[#6F7791] mt-3">
               {value.caption}
             </figcaption>
           )}
@@ -181,7 +181,7 @@ const portableTextComponents: PortableTextComponents = {
     code: ({ value }) => (
       <div className="my-6">
         {value.filename && (
-          <div className="bg-[#1a1f2e] border border-white/10 border-b-0 rounded-t-lg px-4 py-2 text-sm text-[#777D8F] font-mono">
+          <div className="bg-[#1a1f2e] border border-white/10 border-b-0 rounded-t-lg px-4 py-2 text-sm text-[#6F7791] font-mono">
             {value.filename}
           </div>
         )}
@@ -190,7 +190,7 @@ const portableTextComponents: PortableTextComponents = {
             value.filename ? 'rounded-b-lg' : 'rounded-lg'
           }`}
         >
-          <code className="text-[#BFC5D7] font-mono whitespace-pre">{value.code}</code>
+          <code className="text-[#6F7791] font-mono whitespace-pre">{value.code}</code>
         </pre>
       </div>
     ),
@@ -203,7 +203,7 @@ function TableOfContents({ headings }: { headings: Post['headings'] }) {
 
   return (
     <nav className="bg-[#111827]/50 border border-white/10 rounded-xl p-6 mb-8">
-      <h3 className="text-lg font-semibold text-white mb-4">Table of Contents</h3>
+      <h3 className="text-lg font-semibold text-[#BFC4D5] mb-4">Table of Contents</h3>
       <ul className="space-y-2">
         {headings.map((heading, index) => {
           const id = heading.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
@@ -214,7 +214,7 @@ function TableOfContents({ headings }: { headings: Post['headings'] }) {
             >
               <a
                 href={`#${id}`}
-                className="text-[#BFC5D7] hover:text-[#6366F1] transition-colors text-sm"
+                className="text-[#6F7791] hover:text-[#6366F1] transition-colors text-sm"
               >
                 {heading.text}
               </a>
@@ -273,15 +273,15 @@ export default async function BlogPostPage({
           )}
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#BFC4D5] mb-6 leading-tight">
             {post.title}
           </h1>
 
           {/* Excerpt */}
-          <p className="text-xl text-[#A7ABCB] mb-8">{post.excerpt}</p>
+          <p className="text-xl text-[#6F7791] mb-8">{post.excerpt}</p>
 
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-6 text-[#777D8F] pb-8 border-b border-white/10">
+          <div className="flex flex-wrap items-center gap-6 text-[#6F7791] pb-8 border-b border-white/10">
             {/* Author */}
             <div className="flex items-center gap-3">
               {post.author?.image ? (
@@ -298,9 +298,9 @@ export default async function BlogPostPage({
                 </div>
               )}
               <div>
-                <p className="text-white font-medium">{post.author?.name}</p>
+                <p className="text-[#BFC4D5] font-medium">{post.author?.name}</p>
                 {post.author?.bio && (
-                  <p className="text-sm text-[#777D8F] line-clamp-1">{post.author.bio}</p>
+                  <p className="text-sm text-[#6F7791] line-clamp-1">{post.author.bio}</p>
                 )}
               </div>
             </div>
@@ -360,8 +360,8 @@ export default async function BlogPostPage({
               )}
               <div>
                 <p className="text-sm text-[#6366F1] mb-1">Written by</p>
-                <p className="text-xl font-semibold text-white mb-2">{post.author.name}</p>
-                <p className="text-[#BFC5D7]">{post.author.bio}</p>
+                <p className="text-xl font-semibold text-[#BFC4D5] mb-2">{post.author.name}</p>
+                <p className="text-[#6F7791]">{post.author.bio}</p>
               </div>
             </div>
           </div>
