@@ -10,6 +10,8 @@ import { PortableText, PortableTextComponents } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 
+const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://aidataanalytics.io').replace(/\/$/, '')
+
 // Generate static params for all posts
 export async function generateStaticParams() {
   const slugs: string[] = await client.fetch(postSlugsQuery)
@@ -31,15 +33,45 @@ export async function generateMetadata({
     }
   }
 
+  const postUrl = `${baseUrl}/blog/${post.slug.current}`
+  const ogImage = post.mainImage 
+    ? urlForImage(post.mainImage).width(1200).height(630).url()
+    : undefined
+
   return {
     title: `${post.title} | AI Analytics Hub`,
     description: post.excerpt,
+    authors: post.author?.name ? [{ name: post.author.name }] : undefined,
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: postUrl,
+      siteName: 'AI Analytics Hub',
       type: 'article',
       publishedTime: post.publishedAt,
       authors: post.author?.name ? [post.author.name] : undefined,
+      locale: 'en_US',
+      images: ogImage ? [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.mainImage?.alt || post.title,
+        },
+      ] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: ogImage ? [ogImage] : undefined,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   }
 }
@@ -94,7 +126,7 @@ const portableTextComponents: PortableTextComponents = {
       const text = value.children?.[0]?.text || ''
       const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
       return (
-        <h2 id={id} className="text-2xl sm:text-3xl font-bold text-white mt-12 mb-4 scroll-mt-24">
+        <h2 id={id} className="text-2xl sm:text-3xl font-bold text-[#BFC4D5] mt-12 mb-4 scroll-mt-24">
           {children}
         </h2>
       )
@@ -103,33 +135,33 @@ const portableTextComponents: PortableTextComponents = {
       const text = value.children?.[0]?.text || ''
       const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
       return (
-        <h3 id={id} className="text-xl sm:text-2xl font-semibold text-white mt-8 mb-3 scroll-mt-24">
+        <h3 id={id} className="text-xl sm:text-2xl font-semibold text-[#BFC4D5] mt-8 mb-3 scroll-mt-24">
           {children}
         </h3>
       )
     },
     h4: ({ children }) => (
-      <h4 className="text-lg sm:text-xl font-semibold text-white mt-6 mb-2">
+      <h4 className="text-lg sm:text-xl font-semibold text-[#BFC4D5] mt-6 mb-2">
         {children}
       </h4>
     ),
     normal: ({ children }) => (
-      <p className="text-[#BFC5D7] leading-relaxed mb-4">{children}</p>
+      <p className="text-[#6F7791] leading-relaxed mb-4">{children}</p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-[#6366F1] pl-6 py-2 my-6 italic text-[#A7ABCB] bg-[#111827]/50 rounded-r-lg">
+      <blockquote className="border-l-4 border-[#6366F1] pl-6 py-2 my-6 italic text-[#6F7791] bg-[#111827]/50 rounded-r-lg">
         {children}
       </blockquote>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-inside space-y-2 mb-4 text-[#BFC5D7] ml-4">
+      <ul className="list-disc list-inside space-y-2 mb-4 text-[#6F7791] ml-4">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 mb-4 text-[#BFC5D7] ml-4">
+      <ol className="list-decimal list-inside space-y-2 mb-4 text-[#6F7791] ml-4">
         {children}
       </ol>
     ),
@@ -139,7 +171,7 @@ const portableTextComponents: PortableTextComponents = {
     number: ({ children }) => <li className="leading-relaxed">{children}</li>,
   },
   marks: {
-    strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+    strong: ({ children }) => <strong className="font-bold text-[#BFC4D5]">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,
     code: ({ children }) => (
       <code className="bg-[#1a1f2e] text-[#E67F44] px-1.5 py-0.5 rounded text-sm font-mono">
@@ -151,7 +183,7 @@ const portableTextComponents: PortableTextComponents = {
         href={value?.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[#6366F1] hover:text-[#818cf8] underline underline-offset-2 transition-colors"
+        className="text-[#6366F1] hover:text-[#818cf8] underline underline-offset-2 transition-colors [&_strong]:text-[#6366F1] hover:[&_strong]:text-[#818cf8]"
       >
         {children}
       </a>
@@ -171,7 +203,7 @@ const portableTextComponents: PortableTextComponents = {
             />
           </div>
           {value.caption && (
-            <figcaption className="text-center text-sm text-[#777D8F] mt-3">
+            <figcaption className="text-center text-sm text-[#6F7791] mt-3">
               {value.caption}
             </figcaption>
           )}
@@ -181,7 +213,7 @@ const portableTextComponents: PortableTextComponents = {
     code: ({ value }) => (
       <div className="my-6">
         {value.filename && (
-          <div className="bg-[#1a1f2e] border border-white/10 border-b-0 rounded-t-lg px-4 py-2 text-sm text-[#777D8F] font-mono">
+          <div className="bg-[#1a1f2e] border border-white/10 border-b-0 rounded-t-lg px-4 py-2 text-sm text-[#6F7791] font-mono">
             {value.filename}
           </div>
         )}
@@ -190,7 +222,7 @@ const portableTextComponents: PortableTextComponents = {
             value.filename ? 'rounded-b-lg' : 'rounded-lg'
           }`}
         >
-          <code className="text-[#BFC5D7] font-mono whitespace-pre">{value.code}</code>
+          <code className="text-[#6F7791] font-mono whitespace-pre">{value.code}</code>
         </pre>
       </div>
     ),
@@ -203,7 +235,7 @@ function TableOfContents({ headings }: { headings: Post['headings'] }) {
 
   return (
     <nav className="bg-[#111827]/50 border border-white/10 rounded-xl p-6 mb-8">
-      <h3 className="text-lg font-semibold text-white mb-4">Table of Contents</h3>
+      <h3 className="text-lg font-semibold text-[#BFC4D5] mb-4">Table of Contents</h3>
       <ul className="space-y-2">
         {headings.map((heading, index) => {
           const id = heading.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
@@ -214,7 +246,7 @@ function TableOfContents({ headings }: { headings: Post['headings'] }) {
             >
               <a
                 href={`#${id}`}
-                className="text-[#BFC5D7] hover:text-[#6366F1] transition-colors text-sm"
+                className="text-[#6F7791] hover:text-[#6366F1] transition-colors text-sm"
               >
                 {heading.text}
               </a>
@@ -227,6 +259,43 @@ function TableOfContents({ headings }: { headings: Post['headings'] }) {
 }
 
 export const revalidate = 60
+
+// JSON-LD structured data for blog posts
+function generateArticleJsonLd(post: Post) {
+  const postUrl = `${baseUrl}/blog/${post.slug.current}`
+  const imageUrl = post.mainImage 
+    ? urlForImage(post.mainImage).width(1200).height(630).url()
+    : undefined
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    url: postUrl,
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    author: post.author ? {
+      '@type': 'Person',
+      name: post.author.name,
+    } : undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI Analytics Hub',
+      url: baseUrl,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': postUrl,
+    },
+    image: imageUrl ? {
+      '@type': 'ImageObject',
+      url: imageUrl,
+      width: 1200,
+      height: 630,
+    } : undefined,
+  }
+}
 
 export default async function BlogPostPage({
   params,
@@ -241,9 +310,15 @@ export default async function BlogPostPage({
   }
 
   const readingTime = post.body ? calculateReadingTime(post.body) : 1
+  const jsonLd = generateArticleJsonLd(post)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f1116] via-[#111827] to-[#0b0d14]">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -273,15 +348,15 @@ export default async function BlogPostPage({
           )}
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#BFC4D5] mb-6 leading-tight">
             {post.title}
           </h1>
 
           {/* Excerpt */}
-          <p className="text-xl text-[#A7ABCB] mb-8">{post.excerpt}</p>
+          <p className="text-xl text-[#6F7791] mb-8">{post.excerpt}</p>
 
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-6 text-[#777D8F] pb-8 border-b border-white/10">
+          <div className="flex flex-wrap items-center gap-6 text-[#6F7791] pb-8 border-b border-white/10">
             {/* Author */}
             <div className="flex items-center gap-3">
               {post.author?.image ? (
@@ -298,9 +373,9 @@ export default async function BlogPostPage({
                 </div>
               )}
               <div>
-                <p className="text-white font-medium">{post.author?.name}</p>
+                <p className="text-[#BFC4D5] font-medium">{post.author?.name}</p>
                 {post.author?.bio && (
-                  <p className="text-sm text-[#777D8F] line-clamp-1">{post.author.bio}</p>
+                  <p className="text-sm text-[#6F7791] line-clamp-1">{post.author.bio}</p>
                 )}
               </div>
             </div>
@@ -360,8 +435,8 @@ export default async function BlogPostPage({
               )}
               <div>
                 <p className="text-sm text-[#6366F1] mb-1">Written by</p>
-                <p className="text-xl font-semibold text-white mb-2">{post.author.name}</p>
-                <p className="text-[#BFC5D7]">{post.author.bio}</p>
+                <p className="text-xl font-semibold text-[#BFC4D5] mb-2">{post.author.name}</p>
+                <p className="text-[#6F7791]">{post.author.bio}</p>
               </div>
             </div>
           </div>
