@@ -8,9 +8,39 @@ import { urlForImage } from '@/sanity/lib/image'
 import { Calendar, Clock, User } from 'lucide-react'
 import { Metadata } from 'next'
 
+const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://aidataanalytics.io').replace(/\/$/, '')
+
 export const metadata: Metadata = {
-  title: 'Blog | AI Analytics Hub',
-  description: 'Insights, guides, and deep dives into AI analytics tools, data analysis, and the evolving landscape of AI-powered business intelligence.',
+  title: 'AI Analytics Blog | AI Analytics Hub',
+  description: 'Get fresh insights into AI Analytics. Written by a non-technical founder for PMs, marketing and ops teams, business founders, and solopreneurs. AI tool reviews, tutorials, and use-case deep dives.',
+  keywords: [
+    'AI analytics blog',
+    'AI tool reviews',
+    'AI analytics trends',
+    'business intelligence articles',
+    'AI tutorials',
+    'AI use cases',
+  ],
+  alternates: {
+    canonical: `${baseUrl}/blog`,
+  },
+  openGraph: {
+    title: 'AI Analytics Blog | AI Analytics Hub',
+    description: 'Get fresh insights into AI Analytics. Written by a non-technical founder for PMs, marketing and ops teams, business founders, and solopreneurs. AI tool reviews, tutorials, and use-case deep dives.',
+    url: `${baseUrl}/blog`,
+    siteName: 'AI Analytics Hub',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI Analytics Blog | AI Analytics Hub',
+    description: 'Get fresh insights into AI Analytics. Written by a non-technical founder for PMs, marketing and ops teams, business founders, and solopreneurs. AI tool reviews, tutorials, and use-case deep dives.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 // Calculate reading time from word count
@@ -42,12 +72,23 @@ export default async function BlogPage() {
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-white">
-            <span className="bg-[#6366F1] py-1 px-3">Blog</span>
+            <span className="bg-[#6366F1] py-1 px-3">AI Analytics Blog</span>
           </h1>
-          <p className="text-[#BFC5D7] text-lg sm:text-xl max-w-2xl mx-auto">
-            Deep dives into AI analytics, industry insights, and practical guides 
-            to help you navigate the evolving data landscape.
+          <p className="text-[#BFC5D7] text-lg sm:text-xl max-w-2xl mx-auto mb-8">
+            Get fresh insights into an emerging landscape of AI Analytics. Written by a non-technical founder for non-technical readers: PMs, marketing and ops teams, business founders, and solopreneurs. From new AI tool reviews to deep dives into specific use-cases and real-world applications, we help you stay ahead in the evolving world of AI-powered analytics.
           </p>
+          
+          {/* What you'll find */}
+          <div className="flex flex-wrap justify-center gap-3">
+            {['AI Tool Reviews', 'AI Analytics Trends & News', 'Tutorials', 'Use-Case Deep Dives'].map((topic) => (
+              <span
+                key={topic}
+                className="text-sm px-4 py-2 rounded-full bg-[#111827]/70 text-[#BFC5D7] border border-white/10"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 

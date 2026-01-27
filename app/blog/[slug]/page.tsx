@@ -10,6 +10,8 @@ import { PortableText, PortableTextComponents } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 
+const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://aidataanalytics.io').replace(/\/$/, '')
+
 // Generate static params for all posts
 export async function generateStaticParams() {
   const slugs: string[] = await client.fetch(postSlugsQuery)
@@ -31,15 +33,45 @@ export async function generateMetadata({
     }
   }
 
+  const postUrl = `${baseUrl}/blog/${post.slug.current}`
+  const ogImage = post.mainImage 
+    ? urlForImage(post.mainImage).width(1200).height(630).url()
+    : undefined
+
   return {
     title: `${post.title} | AI Analytics Hub`,
     description: post.excerpt,
+    authors: post.author?.name ? [{ name: post.author.name }] : undefined,
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: postUrl,
+      siteName: 'AI Analytics Hub',
       type: 'article',
       publishedTime: post.publishedAt,
       authors: post.author?.name ? [post.author.name] : undefined,
+      locale: 'en_US',
+      images: ogImage ? [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.mainImage?.alt || post.title,
+        },
+      ] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: ogImage ? [ogImage] : undefined,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   }
 }
@@ -228,6 +260,43 @@ function TableOfContents({ headings }: { headings: Post['headings'] }) {
 
 export const revalidate = 60
 
+// JSON-LD structured data for blog posts
+function generateArticleJsonLd(post: Post) {
+  const postUrl = `${baseUrl}/blog/${post.slug.current}`
+  const imageUrl = post.mainImage 
+    ? urlForImage(post.mainImage).width(1200).height(630).url()
+    : undefined
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    url: postUrl,
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    author: post.author ? {
+      '@type': 'Person',
+      name: post.author.name,
+    } : undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI Analytics Hub',
+      url: baseUrl,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': postUrl,
+    },
+    image: imageUrl ? {
+      '@type': 'ImageObject',
+      url: imageUrl,
+      width: 1200,
+      height: 630,
+    } : undefined,
+  }
+}
+
 export default async function BlogPostPage({
   params,
 }: {
@@ -241,9 +310,15 @@ export default async function BlogPostPage({
   }
 
   const readingTime = post.body ? calculateReadingTime(post.body) : 1
+  const jsonLd = generateArticleJsonLd(post)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f1116] via-[#111827] to-[#0b0d14]">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

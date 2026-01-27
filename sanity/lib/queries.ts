@@ -71,3 +71,12 @@ export const postsByCategoryQuery = groq`
   }
 `
 
+// Get all posts for sitemap (minimal data for performance)
+export const postsSitemapQuery = groq`
+  *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+    "slug": slug.current,
+    publishedAt,
+    _updatedAt
+  }
+`
+
